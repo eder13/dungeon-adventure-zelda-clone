@@ -2,7 +2,7 @@ import { PlayerAnimation } from '../../../../common/assets';
 import { DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from './base-player-state';
-import { PlayerStates } from './player-states';
+import { PlayerStates } from '../states';
 
 class HurtState extends BasePlayerState {
     hurtPushbackSpeed: number;

@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import InputComponent from '../../components/input-component/input';
 import ControlsComponent from '../../components/game-object/controls-component';
 import StateMachine from '../../components/state-machine/state-machine';
-import { SawStates } from '../../components/state-machine/states/player/player-states';
+import { SawStates } from '../../components/state-machine/states/states';
 import { TWEEN_DURATION, TWEEN_SCALE_X_PULSE, TWEEN_SCALE_Y_PULSE } from '../../common/globals';
 import BounceMoveState from '../../components/state-machine/states/saw/bounce-move-state';
 import InvulnerableComponent from '../../components/game-object/invulnerable-component';

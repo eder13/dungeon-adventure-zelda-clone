@@ -15,7 +15,7 @@ type ChestConfig = {
 export class Chest extends Phaser.Physics.Arcade.Image {
     state: ChestState;
     #isBossKeyChest: boolean;
-    _interactiveObjectComponent: InteractiveObjectComponent;
+    _interactiveObjectComponent?: InteractiveObjectComponent;
 
     constructor(config: ChestConfig) {
         const frameKey = config.requireBossKey
@@ -27,7 +27,7 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         this.scene.physics.add.existing(this);
         this.setOrigin(0, 1).setImmovable(true);
 
-        this.state = config.chestState ?? CHEST_STATE.HIDDEN;
+        this.state = config.chestState ?? CHEST_STATE.REVEALED;
         this.#isBossKeyChest = config.requireBossKey;
 
         if (this.#isBossKeyChest) {
@@ -38,7 +38,17 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         this._interactiveObjectComponent = new InteractiveObjectComponent(
             this,
             INTERACTIVE_OBJECT_TYPE.OPEN,
-            () => true,
+            () => {
+                if (this.#isBossKeyChest) {
+                    // TODO: Make sure the player has the boss key
+                    return true;
+                }
+
+                return true;
+            },
+            () => {
+                this.open();
+            },
         );
     }
 
@@ -47,6 +57,8 @@ export class Chest extends Phaser.Physics.Arcade.Image {
     }
 
     public open(): void {
+        console.log('+++++ this.open');
+
         if (this.state !== CHEST_STATE.REVEALED) {
             return;
         }
@@ -55,5 +67,6 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         const frameKey = this.#isBossKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
 
         this.setFrame(frameKey);
+        this._interactiveObjectComponent = undefined;
     }
 }

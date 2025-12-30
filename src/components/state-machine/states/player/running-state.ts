@@ -1,8 +1,12 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from './base-player-state';
-import { PlayerStates } from './player-states';
-import { DIRECTION } from '../../../../common/globals';
+import { PlayerStates } from '../states';
+import { DIRECTION, INTERACTIVE_OBJECT_TYPE } from '../../../../common/globals';
+import InputComponent from '../../../input-component/input';
+import CollidingObjectComponent from '../../../game-object/colliding-object-component';
+import InteractiveObjectComponent from '../../../game-object/interactive-object-compoent';
+import Logger from '../../../../common/logger';
 
 class RunningState extends BasePlayerState {
     constructor(gameObject: Player) {
@@ -19,13 +23,19 @@ class RunningState extends BasePlayerState {
             this.stateMachine.setState(PlayerStates.IDLE);
         }
 
+        const objectInteracted = this.checkObjectInteractedWith(this.gameObject.controls);
+
+        console.log('####** objectInteracted', objectInteracted);
+
+        if (objectInteracted) {
+            return;
+        }
+
         if (this.gameObject.controlsComponent.controls.isDownDown) {
             DIRECTION.isMovingDown = true;
             DIRECTION.isMovingUp = false;
             DIRECTION.isMovingLeft = false;
             DIRECTION.isMovingRight = false;
-
-            this.gameObject;
 
             this.gameObject.play(
                 {
@@ -115,6 +125,63 @@ class RunningState extends BasePlayerState {
         } else {
             this.gameObject.updateVelocity(true, 0);
         }
+    }
+
+    private checkObjectInteractedWith(controls: InputComponent) {
+        console.log('#####** checkObjectInteractedWith');
+
+        const collidingObjectComponent = (this.gameObject as any)?.collidingObjectComponent?.objects;
+
+        console.log('#####** collidingObjectComponent.objects.length', collidingObjectComponent?.objects?.length);
+
+        console.log('#####** collidingObjectComponent', collidingObjectComponent);
+
+        if (collidingObjectComponent === undefined || collidingObjectComponent?.objects?.length === 0) {
+            return false;
+        }
+
+        console.log('####** colliding component', collidingObjectComponent);
+
+        const collisionComponent = collidingObjectComponent?.[0];
+
+        console.log('#####** collisionComponent', collisionComponent);
+
+        if (!collisionComponent) {
+            return;
+        }
+
+        const interactivecomponent = collisionComponent?._interactiveObjectComponent;
+
+        if (!interactivecomponent) {
+            return false;
+        }
+
+        if (!this.gameObject.controlsComponent.controls.isActionKeyDown) {
+            return false;
+        }
+
+        if (!interactivecomponent._canInteractCheck()) {
+            return false;
+        }
+        console.log('#####** trying to interact', interactivecomponent);
+        interactivecomponent.interact();
+
+        if (interactivecomponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {
+            this.stateMachine.setState(PlayerStates.LIFT);
+            return true;
+        }
+
+        if (interactivecomponent.objectType === INTERACTIVE_OBJECT_TYPE.OPEN) {
+            this.stateMachine.setState(PlayerStates.OPEN_CHEST);
+            return true;
+        }
+
+        if (interactivecomponent.objectType === INTERACTIVE_OBJECT_TYPE.AUTO) {
+            return false;
+        }
+
+        Logger.error('Unknown interactive object type');
+        return false;
     }
 }
 

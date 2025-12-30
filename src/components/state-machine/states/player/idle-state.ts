@@ -2,7 +2,7 @@ import { PlayerAnimation } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from './base-player-state';
-import { PlayerStates } from './player-states';
+import { PlayerStates } from '../states';
 
 class IdleState extends BasePlayerState {
     constructor(gameObject: Player) {

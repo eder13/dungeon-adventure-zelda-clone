@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import InputComponent from '../../components/input-component/input';
 import ControlsComponent from '../../components/game-object/controls-component';
 import StateMachine from '../../components/state-machine/state-machine';
-import { SpiderStates } from '../../components/state-machine/states/player/player-states';
+import { SpiderStates } from '../../components/state-machine/states/states';
 import {
     DELAY_SPIDER_CHANGE_DIRECTION_MAX,
     DELAY_SPIDER_CHANGE_DIRECTION_MIN,

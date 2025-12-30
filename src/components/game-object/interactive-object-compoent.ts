@@ -25,6 +25,10 @@ class InteractiveObjectComponent extends BaseGameObject {
     public canInteract(): boolean {
         return this._canInteractCheck();
     }
+
+    public interact(): void {
+        this._callback();
+    }
 }
 
 export default InteractiveObjectComponent;

@@ -11,7 +11,7 @@ class BaseGameObject {
     }
 
     static getComponent<T>(gameObject: GameObject): T {
-        return gameObject[`_${this.name}_`] as T;
+        return gameObject[`_${this.name}`] as T;
     }
 
     static remove(gameObject: GameObject) {

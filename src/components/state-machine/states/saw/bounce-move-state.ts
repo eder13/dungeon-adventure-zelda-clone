@@ -3,7 +3,7 @@ import { DIRECTION, SPEED_SAW_BOUNCE } from '../../../../common/globals';
 import Saw from '../../../../game-objects/enemies/saw';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from '../player/base-player-state';
-import { SawStates } from '../player/player-states';
+import { SawStates } from '../states';
 
 class BounceMoveState extends BasePlayerState {
     constructor(gameObject: Saw) {

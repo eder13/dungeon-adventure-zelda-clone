@@ -3,7 +3,7 @@ import { DIRECTION_SAW } from '../../../../common/globals';
 import Saw from '../../../../game-objects/enemies/saw';
 import Spider from '../../../../game-objects/enemies/spider';
 import BasePlayerState from '../player/base-player-state';
-import { SawStates, SpiderStates } from '../player/player-states';
+import { SawStates, SpiderStates } from '../states';
 
 class RunningStateSaw extends BasePlayerState {
     constructor(gameObject: Saw) {

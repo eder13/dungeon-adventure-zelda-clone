@@ -5,7 +5,7 @@ import InputComponent from '../../components/input-component/input';
 import ControlsComponent from '../../components/game-object/controls-component';
 import IdleState from '../../components/state-machine/states/player/idle-state';
 import StateMachine from '../../components/state-machine/state-machine';
-import { PlayerStates } from '../../components/state-machine/states/player/player-states';
+import { PlayerStates } from '../../components/state-machine/states/states';
 import RunningState from '../../components/state-machine/states/player/running-state';
 import { DIRECTION, PUSH_BACK_SPEED, SPEED_PLAYER } from '../../common/globals';
 import InvulnerableComponent from '../../components/game-object/invulnerable-component';
@@ -13,6 +13,10 @@ import HurtState from '../../components/state-machine/states/player/hurt-state';
 import LifeComponent from '../../components/game-object/life-component';
 import DeathStatePlayer from '../../components/state-machine/states/player/death-state';
 import CollidingObjectComponent from '../../components/game-object/colliding-object-component';
+import MoveHoldingState from '../../components/state-machine/states/player/move-holding-state';
+import IdleHoldingState from '../../components/state-machine/states/player/idle-holding-state';
+import OpenChestState from '../../components/state-machine/states/player/open-chest-state';
+import LiftState from '../../components/state-machine/states/player/lift-state';
 
 export interface PlayerConfig {
     scene: Phaser.Scene;
@@ -56,6 +60,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             console.log('Player has died');
         });
         this.stateMachine.addState(deathState);
+        const moveHoldingState = new MoveHoldingState(this);
+        this.stateMachine.addState(moveHoldingState);
+        const idleHoldingState = new IdleHoldingState(this);
+        this.stateMachine.addState(idleHoldingState);
+        const openChestState = new OpenChestState(this);
+        this.stateMachine.addState(openChestState);
+        const liftState = new LiftState(this);
+        this.stateMachine.addState(liftState);
         this.stateMachine.setState(PlayerStates.IDLE);
 
         this.isDefeated = false;
@@ -78,6 +90,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(): void {
         this.stateMachine.update();
+        console.log(this.collidingObjectComponent.objects);
         this.collidingObjectComponent.reset();
     }
 
@@ -131,6 +144,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     public collidingWithObject(object: GameObject) {
+        console.log('####** adObject');
         this.collidingObjectComponent.addObject(object);
     }
 }
