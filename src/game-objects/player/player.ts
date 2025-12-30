@@ -1,5 +1,5 @@
 import { PlayerAnimation } from '../../common/assets';
-import { Position } from '../../common/types';
+import { GameObject, Position } from '../../common/types';
 import * as Phaser from 'phaser';
 import InputComponent from '../../components/input-component/input';
 import ControlsComponent from '../../components/game-object/controls-component';
@@ -12,6 +12,7 @@ import InvulnerableComponent from '../../components/game-object/invulnerable-com
 import HurtState from '../../components/state-machine/states/player/hurt-state';
 import LifeComponent from '../../components/game-object/life-component';
 import DeathStatePlayer from '../../components/state-machine/states/player/death-state';
+import CollidingObjectComponent from '../../components/game-object/colliding-object-component';
 
 export interface PlayerConfig {
     scene: Phaser.Scene;
@@ -29,7 +30,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     invulnerableComponent: InvulnerableComponent;
     lifeComponent: LifeComponent;
     stateMachine: StateMachine;
-
+    collidingObjectComponent: CollidingObjectComponent;
     isDefeated: boolean;
 
     constructor(config: PlayerConfig) {
@@ -41,7 +42,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.controlsComponent = new ControlsComponent(this, playerMovement);
         this.invulnerableComponent = new InvulnerableComponent(this, isInvulnerable, invulnerableDuration);
         this.lifeComponent = new LifeComponent(this, maxLife);
+        this.collidingObjectComponent = new CollidingObjectComponent(this);
 
+        // state machine
         this.stateMachine = new StateMachine('player');
         const idleState: IdleState = new IdleState(this);
         this.stateMachine.addState(idleState);
@@ -75,6 +78,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(): void {
         this.stateMachine.update();
+        this.collidingObjectComponent.reset();
     }
 
     get controls() {
@@ -124,6 +128,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     public disableObject() {
         (this.body as Phaser.Physics.Arcade.Body).enable = false;
         this.active = false;
+    }
+
+    public collidingWithObject(object: GameObject) {
+        this.collidingObjectComponent.addObject(object);
     }
 }
 

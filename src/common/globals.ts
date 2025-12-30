@@ -49,3 +49,15 @@ export const DELAYED_PUSH_BACK_HURT_RESET = 200;
 
 export const PLAYER_HEALTH = 5;
 export const SPIDER_HEALTH = 2;
+
+export const CHEST_STATE = {
+    HIDDEN: 'HIDDEN',
+    REVEALED: 'REVEALED',
+    OPEN: 'OPEN',
+} as const;
+
+export const INTERACTIVE_OBJECT_TYPE = {
+    AUTO: 'AUTO',
+    PICKUP: 'PICKUP',
+    OPEN: 'OPEN',
+} as const;

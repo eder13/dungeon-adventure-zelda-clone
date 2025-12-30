@@ -8,16 +8,21 @@ import Logger from '../common/logger';
 import Spider from '../game-objects/enemies/spider';
 import Saw from '../game-objects/enemies/saw';
 import {
+    CHEST_STATE,
     PLAYER_HEALTH,
     PLAYER_INVULNERABLE_DURATION,
     SAW_INVULNERABLE_DURATION,
     SPIDER_HEALTH,
 } from '../common/globals';
+import { Pot } from '../game-objects/objects/pot';
+import { Chest } from '../game-objects/objects/chest';
+import { GameObject } from '../common/types';
 
 export class GameScene extends Phaser.Scene {
     player!: Player;
     controls!: InputComponent;
     enemyGroup!: Phaser.GameObjects.Group;
+    blockingGroup!: Phaser.GameObjects.Group;
 
     constructor() {
         super({
@@ -99,6 +104,35 @@ export class GameScene extends Phaser.Scene {
             },
         );
 
+        this.blockingGroup = this.add.group([
+            new Pot({
+                scene: this,
+                position: {
+                    x: this.scale.width / 2,
+                    y: this.scale.height / 2 + 150,
+                },
+            }),
+            new Chest({
+                scene: this,
+                position: {
+                    x: this.scale.width / 2,
+                    y: this.scale.height / 2 - 100,
+                },
+                requireBossKey: false,
+                chestState: CHEST_STATE.REVEALED,
+            }),
+
+            new Chest({
+                scene: this,
+                position: {
+                    x: this.scale.width / 2 - 50,
+                    y: this.scale.height / 2 - 100,
+                },
+                requireBossKey: true,
+                chestState: CHEST_STATE.REVEALED,
+            }),
+        ]);
+
         this.registerColliders();
     }
 
@@ -112,5 +146,13 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.enemyGroup, () => {
             this.player.hit(1);
         });
+
+        // collision between player and blocking group
+        this.physics.add.collider(this.player, this.blockingGroup, (player, gameObject) => {
+            this.player.collidingWithObject(gameObject as GameObject);
+        });
+
+        // collision between enemies and objects
+        this.physics.add.collider(this.enemyGroup, this.blockingGroup, () => {});
     }
 }

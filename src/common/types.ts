@@ -1,5 +1,5 @@
-import Player from '../game-objects/player/player';
 import { PlayerAnimation } from './assets';
+import { CHEST_STATE, INTERACTIVE_OBJECT_TYPE } from './globals';
 
 export type CharacterAnimation = keyof typeof PlayerAnimation;
 
@@ -9,3 +9,7 @@ export type Position = {
 };
 
 export type GameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+
+export type ChestState = keyof typeof CHEST_STATE;
+
+export type InteractiveObjectType = keyof typeof INTERACTIVE_OBJECT_TYPE;
