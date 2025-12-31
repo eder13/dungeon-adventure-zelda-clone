@@ -3,6 +3,7 @@ import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from './base-player-state';
 import { PlayerStates } from '../states';
+import { GameObject } from '../../../../common/types';
 
 class MoveHoldingState extends BasePlayerState {
     constructor(gameObject: Player) {
@@ -14,11 +15,55 @@ class MoveHoldingState extends BasePlayerState {
     }
 
     onUpdate(args?: unknown[]) {
+        this.handleCharacterMovement();
+        this.handleObjectCarrying();
+    }
+
+    handleObjectCarrying() {
+        const heldGameObjectComponent = (this.gameObject as any).objectHeldComponent;
+
+        console.log('+++++ heldGameObjectComponent', heldGameObjectComponent);
+
+        if (!heldGameObjectComponent) {
+            this.stateMachine.setState(PlayerStates.IDLE);
+            return;
+        }
+
+        if (DIRECTION.isMovingDown) {
+            (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
+                this.gameObject.x,
+                this.gameObject.y - 10,
+            );
+        } else if (DIRECTION.isMovingUp) {
+            (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
+                this.gameObject.x + 1,
+                this.gameObject.y - 14,
+            );
+        } else if (DIRECTION.isMovingRight) {
+            (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
+                this.gameObject.x + 2,
+                this.gameObject.y - 12,
+            );
+        } else if (DIRECTION.isMovingLeft) {
+            (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
+                this.gameObject.x - 2,
+                this.gameObject.y - 12,
+            );
+        }
+    }
+
+    handleCharacterMovement() {
         const controls = this.gameObject.controlsComponent.controls;
+
+        if (!controls.isDownDown && !controls.isUpDown && !controls.isLeftDown && !controls.isRightDown) {
+            this.stateMachine.setState(PlayerStates.IDLE_HOLDING);
+        }
 
         if (controls.isActionKeyDown) {
             // TODO: Throw State
-            this.gameObject.stateMachine.setState(PlayerStates.IDLE);
+            //this.gameObject.stateMachine.setState(PlayerStates.IDLE);
+            this.gameObject.stateMachine.setState(PlayerStates.THROW);
+
             return;
         }
 

@@ -54,7 +54,7 @@ class Spider extends Phaser.Physics.Arcade.Sprite {
         this.isDefeated = false;
 
         this.scene.time.addEvent({
-            delay: Phaser.Math.Between(500, 1500),
+            delay: Phaser.Math.Between(DELAY_SPIDER_CHANGE_DIRECTION_MIN, DELAY_SPIDER_CHANGE_DIRECTION_MAX),
             callback: () => {
                 this.changeDirection();
             },

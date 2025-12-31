@@ -4,8 +4,6 @@ import BasePlayerState from './base-player-state';
 import { PlayerStates } from '../states';
 import { DIRECTION, INTERACTIVE_OBJECT_TYPE } from '../../../../common/globals';
 import InputComponent from '../../../input-component/input';
-import CollidingObjectComponent from '../../../game-object/colliding-object-component';
-import InteractiveObjectComponent from '../../../game-object/interactive-object-compoent';
 import Logger from '../../../../common/logger';
 
 class RunningState extends BasePlayerState {
@@ -24,9 +22,6 @@ class RunningState extends BasePlayerState {
         }
 
         const objectInteracted = this.checkObjectInteractedWith(this.gameObject.controls);
-
-        console.log('####** objectInteracted', objectInteracted);
-
         if (objectInteracted) {
             return;
         }
@@ -128,23 +123,13 @@ class RunningState extends BasePlayerState {
     }
 
     private checkObjectInteractedWith(controls: InputComponent) {
-        console.log('#####** checkObjectInteractedWith');
-
         const collidingObjectComponent = (this.gameObject as any)?.collidingObjectComponent?.objects;
-
-        console.log('#####** collidingObjectComponent.objects.length', collidingObjectComponent?.objects?.length);
-
-        console.log('#####** collidingObjectComponent', collidingObjectComponent);
 
         if (collidingObjectComponent === undefined || collidingObjectComponent?.objects?.length === 0) {
             return false;
         }
 
-        console.log('####** colliding component', collidingObjectComponent);
-
         const collisionComponent = collidingObjectComponent?.[0];
-
-        console.log('#####** collisionComponent', collisionComponent);
 
         if (!collisionComponent) {
             return;
@@ -167,7 +152,7 @@ class RunningState extends BasePlayerState {
         interactivecomponent.interact();
 
         if (interactivecomponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {
-            this.stateMachine.setState(PlayerStates.LIFT);
+            this.stateMachine.setState(PlayerStates.LIFT, collisionComponent);
             return true;
         }
 

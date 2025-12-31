@@ -51,17 +51,19 @@ class IdleHoldingState extends BasePlayerState {
     }
 
     onUpdate(args?: unknown[]) {
-        if (
+        /*  if (
             !this.gameObject.controls.isDownDown &&
             !this.gameObject.controls.isUpDown &&
             !this.gameObject.controls.isLeftDown &&
             !this.gameObject.controls.isRightDown
         ) {
             return;
-        }
+        } */
 
         if (this.gameObject.controls.isActionKeyDown) {
-            // TODO: Throw Item
+            // TODO: Throw State
+            this.gameObject.stateMachine.setState(PlayerStates.THROW);
+            return;
         }
 
         this.stateMachine.setState(PlayerStates.MOVING_HOLDING, DIRECTION);

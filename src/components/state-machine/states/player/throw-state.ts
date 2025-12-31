@@ -3,37 +3,19 @@ import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import BasePlayerState from './base-player-state';
 import { PlayerStates } from '../states';
-import { GameObject } from '../../../../common/types';
 
-class LiftState extends BasePlayerState {
+class ThrowState extends BasePlayerState {
     constructor(gameObject: Player) {
-        super(PlayerStates.LIFT, gameObject);
+        super(PlayerStates.THROW, gameObject);
     }
 
     onEnter(args?: unknown[]) {
-        const gameObjectPickedUp = args?.[0] as GameObject | undefined;
-
         this.gameObject.updateVelocity(true, 0);
         this.gameObject.updateVelocity(false, 0);
 
-        const heldGameObjectComponent = (this.gameObject as any).objectHeldComponent;
-        if (!heldGameObjectComponent) {
-            this.stateMachine.setState(PlayerStates.IDLE);
-            return;
-        }
-        heldGameObjectComponent._object = gameObjectPickedUp;
-        (this.gameObject as any).objectHeldComponent._object = gameObjectPickedUp;
-
-        console.log('#####** heldGameObjectComponent._object', (this.gameObject as any).objectHeldComponent);
-
-        if (gameObjectPickedUp?.body) {
-            const body = gameObjectPickedUp.body as Phaser.Physics.Arcade.Body;
-            body.enable = false;
-        }
-        gameObjectPickedUp?.setDepth(2).setOrigin(0.5, 0.5);
-
+        // Lift Animation in reverse
         if (DIRECTION.isMovingDown) {
-            this.gameObject.play(
+            this.gameObject.playReverse(
                 {
                     key: PlayerAnimation.PICKUP_DOWN,
                     repeat: -1,
@@ -41,7 +23,7 @@ class LiftState extends BasePlayerState {
                 true,
             );
         } else if (DIRECTION.isMovingUp) {
-            this.gameObject.play(
+            this.gameObject.playReverse(
                 {
                     key: PlayerAnimation.PICKUP_UP,
                     repeat: -1,
@@ -49,7 +31,7 @@ class LiftState extends BasePlayerState {
                 true,
             );
         } else if (DIRECTION.isMovingLeft) {
-            this.gameObject.play(
+            this.gameObject.playReverse(
                 {
                     key: PlayerAnimation.PICKUP_LEFT,
                     repeat: -1,
@@ -57,7 +39,7 @@ class LiftState extends BasePlayerState {
                 true,
             );
         } else if (DIRECTION.isMovingRight) {
-            this.gameObject.play(
+            this.gameObject.playReverse(
                 {
                     key: PlayerAnimation.PICKUP_RIGHT,
                     repeat: -1,
@@ -65,6 +47,23 @@ class LiftState extends BasePlayerState {
                 true,
             );
         }
+
+        const heldGameObjectComponent = (this.gameObject as any).objectHeldComponent;
+
+        console.log('#####** this.gameObjects', this.gameObject);
+
+        if (!heldGameObjectComponent || !heldGameObjectComponent._object) {
+            return;
+        }
+        const throwableObjectComponent = heldGameObjectComponent.throwableObjectComponent;
+
+        console.log('###### ++++++', heldGameObjectComponent);
+
+        if (throwableObjectComponent !== undefined) {
+            throwableObjectComponent.throw();
+            return;
+        }
+        heldGameObjectComponent.drop();
     }
 
     onExit() {
@@ -73,8 +72,8 @@ class LiftState extends BasePlayerState {
     }
 
     onUpdate(args?: unknown[]) {
-        this.stateMachine.setState(PlayerStates.IDLE_HOLDING, DIRECTION);
+        this.stateMachine.setState(PlayerStates.IDLE, DIRECTION);
     }
 }
 
-export default LiftState;
+export default ThrowState;

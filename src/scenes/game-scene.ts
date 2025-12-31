@@ -162,7 +162,7 @@ export class GameScene extends Phaser.Scene {
         EVENT_BUS.on(
             Events.OPEN_CHEST,
             (chest) => {
-                console.log('####** callback chest opened', chest);
+                Logger.info(`[event]: ${Events.OPEN_CHEST}, args=${chest}`);
             },
             this,
         );

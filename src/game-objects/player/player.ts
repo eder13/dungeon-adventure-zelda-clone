@@ -17,6 +17,9 @@ import MoveHoldingState from '../../components/state-machine/states/player/move-
 import IdleHoldingState from '../../components/state-machine/states/player/idle-holding-state';
 import OpenChestState from '../../components/state-machine/states/player/open-chest-state';
 import LiftState from '../../components/state-machine/states/player/lift-state';
+import ObjectHeldComponent from '../../components/game-object/object-held-component';
+import ThrowableObjectComponent from '../../components/game-object/throwable-object-component';
+import ThrowState from '../../components/state-machine/states/player/throw-state';
 
 export interface PlayerConfig {
     scene: Phaser.Scene;
@@ -35,6 +38,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     lifeComponent: LifeComponent;
     stateMachine: StateMachine;
     collidingObjectComponent: CollidingObjectComponent;
+    public objectHeldComponent: ObjectHeldComponent;
     isDefeated: boolean;
 
     constructor(config: PlayerConfig) {
@@ -47,6 +51,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.invulnerableComponent = new InvulnerableComponent(this, isInvulnerable, invulnerableDuration);
         this.lifeComponent = new LifeComponent(this, maxLife);
         this.collidingObjectComponent = new CollidingObjectComponent(this);
+        this.objectHeldComponent = new ObjectHeldComponent(this);
 
         // state machine
         this.stateMachine = new StateMachine('player');
@@ -68,6 +73,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.addState(openChestState);
         const liftState = new LiftState(this);
         this.stateMachine.addState(liftState);
+        const throwState = new ThrowState(this);
+        this.stateMachine.addState(throwState);
         this.stateMachine.setState(PlayerStates.IDLE);
 
         this.isDefeated = false;
@@ -90,7 +97,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(): void {
         this.stateMachine.update();
-        console.log(this.collidingObjectComponent.objects);
         this.collidingObjectComponent.reset();
     }
 

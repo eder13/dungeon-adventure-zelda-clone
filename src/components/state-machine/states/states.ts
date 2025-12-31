@@ -7,6 +7,7 @@ export enum PlayerStates {
     OPEN_CHEST = 'OPEN_CHEST',
     IDLE_HOLDING = 'IDLE_HOLDING',
     MOVING_HOLDING = 'MOVING_HOLDING',
+    THROW = 'THROW',
 }
 
 export enum SpiderStates {

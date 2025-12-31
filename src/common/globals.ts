@@ -1,4 +1,4 @@
-export const LOG_ENABLED_STATE = true;
+export const LOG_ENABLED_STATE = false;
 
 export const DIRECTION = {
     isMovingRight: false,
