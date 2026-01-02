@@ -49,9 +49,9 @@ class Spider extends Phaser.Physics.Arcade.Sprite {
 
         this.stateMachine = new StateMachine('spider');
         const idleState: IdleStateSpider = new IdleStateSpider(this);
-        //const runningState: RunningStateSpider = new RunningStateSpider(this);
         this.stateMachine.addState(idleState);
-        //this.stateMachine.addState(runningState);
+        const runningState: RunningStateSpider = new RunningStateSpider(this);
+        this.stateMachine.addState(runningState);
         this.stateMachine.setState(SpiderStates.IDLE);
         const deathState: DeathStateSpider = new DeathStateSpider(this, () => {
             this.isDefeated = true;

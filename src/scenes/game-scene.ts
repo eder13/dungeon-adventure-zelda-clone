@@ -162,8 +162,13 @@ export class GameScene extends Phaser.Scene {
                 if (gameObject instanceof Pot) {
                     const enemyGameObject = enemy as Spider | Saw;
 
-                    if (enemyGameObject instanceof Spider) {
-                        enemyGameObject.hit(2);
+                    if (
+                        this.player.objectHeldComponent._object &&
+                        this.player.objectHeldComponent._object instanceof Pot
+                    ) {
+                        if (enemyGameObject instanceof Spider) {
+                            enemyGameObject.hit(2);
+                        }
                     }
                 }
             },
