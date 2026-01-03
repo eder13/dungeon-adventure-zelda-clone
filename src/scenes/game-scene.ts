@@ -24,6 +24,8 @@ export class GameScene extends Phaser.Scene {
     controls!: InputComponent;
     enemyGroup!: Phaser.GameObjects.Group;
     blockingGroup!: Phaser.GameObjects.Group;
+    fpsText!: HTMLElement | null;
+    private lastFpsUpdate = 0;
 
     constructor() {
         super({
@@ -47,6 +49,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     public create(): void {
+        this.fpsText = document.getElementById('fps');
+
         this.initZoom();
 
         if (!this.input.keyboard) {
@@ -138,6 +142,14 @@ export class GameScene extends Phaser.Scene {
         this.registerCustomEvents();
     }
 
+    update(time: number, delta: number): void {
+        // throttle FPS DOM update to reduce work (update ~4x/sec)
+        if (this.fpsText && time - this.lastFpsUpdate > 250) {
+            this.fpsText.innerHTML = `${Math.floor(this.game.loop.actualFps)}`;
+            this.lastFpsUpdate = time;
+        }
+    }
+
     registerColliders() {
         this.enemyGroup.children.each((enemy) => {
             const enemyTyped = enemy as Spider | Saw;
@@ -172,9 +184,26 @@ export class GameScene extends Phaser.Scene {
                     }
                 }
             },
-            (enemy) => {
-                if (this.player.objectHeldComponent._object && this.player.objectHeldComponent._object instanceof Pot) {
-                    return enemy instanceof Saw ? false : true;
+            (enemy, gameObject) => {
+                if (enemy instanceof Saw && gameObject instanceof Chest) {
+                    return true;
+                }
+
+                if (
+                    this.player.objectHeldComponent._object &&
+                    this.player.objectHeldComponent._object instanceof Pot &&
+                    enemy instanceof Saw &&
+                    gameObject instanceof Pot
+                ) {
+                    return false;
+                }
+
+                if (
+                    this.player.objectHeldComponent._object &&
+                    this.player.objectHeldComponent._object instanceof Pot &&
+                    enemy instanceof Spider
+                ) {
+                    return true;
                 }
 
                 return true;

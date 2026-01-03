@@ -146,12 +146,10 @@ class Spider extends Phaser.Physics.Arcade.Sprite {
         }
         this.lifeComponent.takeDamage(damage);
 
-        console.log('#####** Current Lives:', this.lifeComponent.currentLives);
-
         if (this.lifeComponent.currentLives <= 0) {
-            this.stateMachine.setState(SpiderStates.HURT);
             this.isDefeated = true;
             this.stateMachine.setState(SpiderStates.DEATH);
+            return;
         }
 
         this.stateMachine.setState(SpiderStates.HURT);

@@ -1,5 +1,6 @@
 import { DIRECTION, THROW_ITEM_DELAY_BEFORE_CALLBACK, THROW_SPEED } from '../../common/globals';
-import { GameObject, isCustomGameObject } from '../../common/types';
+import { GameObject } from '../../common/types';
+import { isCustomGameObject } from '../../common/utils';
 import BaseGameObject from './base-game-object-component';
 
 class ThrowableObjectComponent extends BaseGameObject {

@@ -11,8 +11,6 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     height: 360,
     scale: {
         parent: 'game-container',
-        /*  width: 256,
-    height: 224, */
         autoCenter: Phaser.Scale.CENTER_BOTH,
         mode: Phaser.Scale.FIT,
     },
@@ -21,9 +19,12 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0, x: 0 },
-            debug: true,
+            fps: 60,
+            debug: false,
         },
     },
+    fps: { target: 60, forceSetTimeOut: false },
+    render: { pixelArt: true, antialias: false },
 };
 
 const game = new Phaser.Game(gameConfig);

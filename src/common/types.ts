@@ -18,7 +18,3 @@ export interface CustomGameObject {
     enableObject(): void;
     disableObject(): void;
 }
-
-export function isCustomGameObject(object: any): object is CustomGameObject {
-    return object && typeof object.enableObject === 'function' && typeof object.disableObject === 'function';
-}

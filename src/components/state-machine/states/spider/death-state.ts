@@ -1,4 +1,5 @@
 import { SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
+import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
 import BasePlayerState from '../player/base-player-state';
 import { SpiderStates } from '../states';
@@ -20,6 +21,14 @@ class DeathStateSpider extends BasePlayerState {
         this.gameObject.play({
             key: SPIDER_ANIMATION_KEYS.DEATH,
             repeat: 0,
+        });
+
+        // after the push back, wait a certain amount if time before reseting velocity
+        this.gameObject.scene.time.delayedCall(DELAYED_PUSH_BACK_HURT_RESET, () => {
+            if (this.gameObject.body) {
+                this.gameObject.body.velocity.x = 0;
+                this.gameObject.body.velocity.y = 0;
+            }
         });
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
