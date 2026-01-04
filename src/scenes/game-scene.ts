@@ -18,6 +18,7 @@ import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
 import { GameObject } from '../common/types';
 import { EVENT_BUS, Events } from '../common/events';
+import { Fire } from '../game-objects/objects/fire';
 
 export class GameScene extends Phaser.Scene {
     player!: Player;
@@ -136,6 +137,14 @@ export class GameScene extends Phaser.Scene {
                 requireBossKey: true,
                 chestState: CHEST_STATE.REVEALED,
             }),
+
+            new Fire({
+                scene: this,
+                position: {
+                    x: this.scale.width / 2 + 50,
+                    y: this.scale.height / 2 - 100,
+                },
+            }),
         ]);
 
         this.registerColliders();
@@ -185,10 +194,12 @@ export class GameScene extends Phaser.Scene {
                 }
             },
             (enemy, gameObject) => {
+                // collision between enemy and chest
                 if (enemy instanceof Saw && gameObject instanceof Chest) {
                     return true;
                 }
 
+                // collision between enemy and pot and various logic like saw does not care
                 if (
                     this.player.objectHeldComponent._object &&
                     this.player.objectHeldComponent._object instanceof Pot &&
@@ -197,12 +208,19 @@ export class GameScene extends Phaser.Scene {
                 ) {
                     return false;
                 }
-
                 if (
                     this.player.objectHeldComponent._object &&
                     this.player.objectHeldComponent._object instanceof Pot &&
                     enemy instanceof Spider
                 ) {
+                    return true;
+                }
+
+                // Collision between fire and enemies
+                if (enemy instanceof Saw && gameObject instanceof Fire) {
+                    return true;
+                }
+                if (enemy instanceof Spider && gameObject instanceof Fire) {
                     return true;
                 }
 

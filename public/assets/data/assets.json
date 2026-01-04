@@ -71,6 +71,22 @@
         ]
     },
     {
+        "path": "assets/images/objects",
+        "files": [
+            {
+                "type": "aseprite",
+                "key": "FIRE",
+                "textureURL": "fire-sheet.png",
+                "atlasURL": "fire.json"
+            },
+            {
+                "type": "image",
+                "key": "FIRE_IDLE",
+                "url": "fire_idle.png"
+            }
+        ]
+    },
+    {
         "path": "assets/images/enemies",
         "files": [
             {

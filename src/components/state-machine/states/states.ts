@@ -21,3 +21,7 @@ export enum SawStates {
     RUNNING = 'RUNNING',
     BOUNCE_MOVE = 'BOUNCE_MOVE',
 }
+
+export enum FireStates {
+    BURNING = 'BURNING',
+}

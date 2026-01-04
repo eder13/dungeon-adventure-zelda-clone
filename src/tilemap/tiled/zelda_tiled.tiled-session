@@ -29,6 +29,26 @@
         "#grassland_resized": {
             "scaleInDock": 1.6973
         },
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx": {
+            "scale": 0.7285,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 309.54015099519563,
+                "y": 551.818805765271
+            }
+        },
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx#Legend_Spider_Dungeon": {
+            "scaleInDock": 1.0784
+        },
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx#collision": {
+            "scaleInDock": 1
+        },
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx#dungeon": {
+            "scaleInDock": 2.5732
+        },
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx#pot": {
+            "scaleInDock": 1
+        },
         "/Users/swestover/Desktop/cleanup/metroidvania/level1.tmx": {
             "scale": 1.77,
             "selectedLayer": 0,
@@ -278,10 +298,10 @@
                 47
             ],
             "scale": 0.8232,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 792.6384839650145,
-                "y": 450.07288629737604
+                "x": 677.2351797862002,
+                "y": 549.0767735665695
             }
         },
         "dungeon_1.tmx#Legend_Spider_Dungeon": {
@@ -321,7 +341,7 @@
     },
     "frame.defaultDuration": 500,
     "last.exportedFilePath": "/Users/swestover/Desktop/legend_of_zelda_assets/tiled",
-    "last.imagePath": "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/tiled/assets",
+    "last.imagePath": "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/assets/aseprite",
     "last.objectTypesPath": "/Users/swestover/Desktop/legend_of_zelda_assets/tiled/propertytypes.json",
     "map.fixedSize": true,
     "map.height": 68,

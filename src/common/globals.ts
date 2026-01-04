@@ -27,9 +27,9 @@ export const DIRECTION_SAW = {
     isMovingDown: false,
 };
 
-export const SPEED_PLAYER = 80;
+export const SPEED_PLAYER = 120;
 
-export const SPEED_SPIDER = 120;
+export const SPEED_SPIDER = 150;
 
 export const DELAY_SPIDER_CHANGE_DIRECTION_MIN = 500;
 export const DELAY_SPIDER_CHANGE_DIRECTION_MAX = 1500;
