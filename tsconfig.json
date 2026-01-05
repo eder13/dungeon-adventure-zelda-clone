@@ -1,17 +1,15 @@
 {
-	"extends": "@devshareacademy/tsconfig/tsconfig.json",
-	"compilerOptions": {
-		"outDir": "dist",
-		"typeRoots": [
-      "node_modules/@types"
-    ]
-	},
-	"include": [
-		"**/*.ts"
-	],
-	"ts-node": {
+    "extends": "@devshareacademy/tsconfig/tsconfig.json",
     "compilerOptions": {
-      "module": "commonjs"
+        "outDir": "dist",
+        "typeRoots": ["node_modules/@types"],
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*.ts", "**/*.ts"],
+    "exclude": ["node_modules", "dist", "build"],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs"
+        }
     }
-  }
 }

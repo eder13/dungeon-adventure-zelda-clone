@@ -1,10 +1,10 @@
 import { SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
-import BasePlayerState from '../player/base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { SpiderStates } from '../states';
 
-class DeathStateSpider extends BasePlayerState {
+class DeathStateSpider extends AbstractMovableState {
     onDieCallback: () => void;
 
     constructor(gameObject: Spider, onDieCallback: () => void) {

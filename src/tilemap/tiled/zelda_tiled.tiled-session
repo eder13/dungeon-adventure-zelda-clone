@@ -30,11 +30,11 @@
             "scaleInDock": 1.6973
         },
         "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx": {
-            "scale": 0.7285,
-            "selectedLayer": 1,
+            "scale": 0.4883,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 309.54015099519563,
-                "y": 551.818805765271
+                "x": 938.9719434773706,
+                "y": 602.0888797870161
             }
         },
         "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx#Legend_Spider_Dungeon": {
@@ -300,8 +300,8 @@
             "scale": 0.8232,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 677.2351797862002,
-                "y": 549.0767735665695
+                "x": 564.2614188532556,
+                "y": 433.673469387755
             }
         },
         "dungeon_1.tmx#Legend_Spider_Dungeon": {
@@ -354,8 +354,9 @@
         "world.tmx"
     ],
     "project": "zelda_tiled.tiled-project",
-    "property.type": "bool",
+    "property.type": "int",
     "recentFiles": [
+        "/Users/sranftl/private_projects/rpg-phaser-typescript/src/tilemap/levels/dungeon_1.tmx",
         "world.tmx",
         "/Users/swestover/Desktop/zelda_tiled/world_backup.tmx",
         "dungeon_1.tmx",

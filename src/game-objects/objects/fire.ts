@@ -10,7 +10,7 @@ type FireConfig = {
     position: Position;
 };
 
-export class Fire extends Phaser.Physics.Arcade.Sprite {
+class Fire extends Phaser.Physics.Arcade.Sprite {
     stateMachine: StateMachine;
 
     constructor(config: FireConfig) {
@@ -26,3 +26,5 @@ export class Fire extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState(FireStates.BURNING);
     }
 }
+
+export default Fire;

@@ -2,9 +2,9 @@ import { PlayerAnimation, SPIDER_ANIMATION_KEYS } from '../../../../common/asset
 import { DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
 import { PlayerStates, SpiderStates } from '../states';
 import Spider from '../../../../game-objects/enemies/spider';
-import BasePlayerState from '../player/base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 
-class HurtStateSpider extends BasePlayerState {
+class HurtStateSpider extends AbstractMovableState {
     hurtPushbackSpeed: number;
     onHurtCallback: () => void;
     nextState: string;

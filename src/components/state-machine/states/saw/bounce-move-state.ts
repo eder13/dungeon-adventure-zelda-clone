@@ -2,10 +2,10 @@ import { PlayerAnimation, SAW_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION, SPEED_SAW_BOUNCE } from '../../../../common/globals';
 import Saw from '../../../../game-objects/enemies/saw';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from '../player/base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { SawStates } from '../states';
 
-class BounceMoveState extends BasePlayerState {
+class BounceMoveState extends AbstractMovableState {
     constructor(gameObject: Saw) {
         super(SawStates.BOUNCE_MOVE, gameObject);
     }

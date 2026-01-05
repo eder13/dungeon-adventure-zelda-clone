@@ -2,10 +2,10 @@ import { SAW_ANIMATION_KEYS, SPIDER_ANIMATION_KEYS } from '../../../../common/as
 import { DIRECTION_SAW } from '../../../../common/globals';
 import Saw from '../../../../game-objects/enemies/saw';
 import Spider from '../../../../game-objects/enemies/spider';
-import BasePlayerState from '../player/base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { SawStates, SpiderStates } from '../states';
 
-class RunningStateSaw extends BasePlayerState {
+class RunningStateSaw extends AbstractMovableState {
     constructor(gameObject: Saw) {
         super(SawStates.RUNNING, gameObject);
     }

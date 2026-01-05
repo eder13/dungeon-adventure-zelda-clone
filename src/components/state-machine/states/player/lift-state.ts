@@ -1,11 +1,11 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from './base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
 import { GameObject } from '../../../../common/types';
 
-class LiftState extends BasePlayerState {
+class LiftState extends AbstractMovableState {
     constructor(gameObject: Player) {
         super(PlayerStates.LIFT, gameObject);
     }
@@ -13,7 +13,11 @@ class LiftState extends BasePlayerState {
     onEnter(args?: unknown[]) {
         const gameObjectPickedUp = args?.[0] as GameObject | undefined;
 
-        console.log('[LiftState] enter', { time: Date.now(), player: this.gameObject, instanceofPlayer: this.gameObject instanceof Player });
+        console.log('[LiftState] enter', {
+            time: Date.now(),
+            player: this.gameObject,
+            instanceofPlayer: this.gameObject instanceof Player,
+        });
         console.log('[LiftState] setting held object ->', gameObjectPickedUp);
 
         this.gameObject.updateVelocity(true, 0);

@@ -51,6 +51,6 @@ export class PreloadScene extends Phaser.Scene {
         });
 
         // list all entries of the animations -> check if it works
-        console.log(this.anims.anims.entries);
+        //console.log(this.anims.anims.entries);
     }
 }

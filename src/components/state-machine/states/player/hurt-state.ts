@@ -1,10 +1,10 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import { DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from './base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
 
-class HurtState extends BasePlayerState {
+class HurtState extends AbstractMovableState {
     hurtPushbackSpeed: number;
     onHurtCallback: () => void;
     nextState: string;

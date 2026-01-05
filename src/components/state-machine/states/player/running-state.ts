@@ -1,12 +1,12 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from './base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
 import { DIRECTION, INTERACTIVE_OBJECT_TYPE } from '../../../../common/globals';
 import InputComponent from '../../../input-component/input';
 import Logger from '../../../../common/logger';
 
-class RunningState extends BasePlayerState {
+class RunningState extends AbstractMovableState {
     constructor(gameObject: Player) {
         super(PlayerStates.RUNNING, gameObject);
     }

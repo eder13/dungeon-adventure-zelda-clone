@@ -1,10 +1,10 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from './base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
 
-class IdleHoldingState extends BasePlayerState {
+class IdleHoldingState extends AbstractMovableState {
     constructor(gameObject: Player) {
         super(PlayerStates.IDLE_HOLDING, gameObject);
     }

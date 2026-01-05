@@ -2,10 +2,10 @@ import { PlayerAnimation } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
 import { DIRECTION_SPIDER } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
-import BasePlayerState from '../player/base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { SpiderStates } from '../states';
 
-class RunningStateSpider extends BasePlayerState {
+class RunningStateSpider extends AbstractMovableState {
     constructor(gameObject: Spider) {
         super(SpiderStates.RUNNING, gameObject);
     }

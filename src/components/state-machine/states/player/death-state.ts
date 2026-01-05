@@ -1,10 +1,10 @@
 import { PlayerAnimation } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
-import BasePlayerState from './base-player-state';
+import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
 
-class DeathStatePlayer extends BasePlayerState {
+class DeathStatePlayer extends AbstractMovableState {
     onDieCallback: () => void;
 
     constructor(gameObject: Player, onDieCallback: () => void) {

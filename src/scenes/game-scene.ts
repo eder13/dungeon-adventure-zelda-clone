@@ -18,7 +18,7 @@ import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
 import { GameObject } from '../common/types';
 import { EVENT_BUS, Events } from '../common/events';
-import { Fire } from '../game-objects/objects/fire';
+import Fire from '../game-objects/objects/fire';
 
 export class GameScene extends Phaser.Scene {
     player!: Player;
@@ -160,6 +160,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     registerColliders() {
+        // @ts-ignore
         this.enemyGroup.children.each((enemy) => {
             const enemyTyped = enemy as Spider | Saw;
             enemyTyped.setCollideWorldBounds(true);

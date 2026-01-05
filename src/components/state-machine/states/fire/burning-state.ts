@@ -1,9 +1,9 @@
 import { FIRE_ANIMATION_KEYS } from '../../../../common/assets';
 import { FireStates } from '../states';
-import BasePlayerState from '../player/base-player-state';
-import { Fire } from '../../../../game-objects/objects/fire';
+import Fire from '../../../../game-objects/objects/fire';
+import AbstractStaticState from '../../base/abstract-static-state';
 
-class BurningStateFire extends BasePlayerState {
+class BurningStateFire extends AbstractStaticState {
     constructor(gameObject: Fire) {
         super(FireStates.BURNING, gameObject);
     }
