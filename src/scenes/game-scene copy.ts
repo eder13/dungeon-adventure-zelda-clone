@@ -162,8 +162,8 @@ export class GameScene extends Phaser.Scene {
     registerColliders() {
         // @ts-ignore
         this.enemyGroup.children.each((enemy) => {
-            const enemyTyped = enemy as Spider | Saw;
-            enemyTyped.setCollideWorldBounds(true);
+            //const enemyTyped = enemy as Spider | Saw;
+            //enemyTyped.setCollideWorldBounds(true);
         });
 
         // collision betweem player and other gameobjects

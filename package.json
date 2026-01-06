@@ -13,6 +13,7 @@
 	"devDependencies": {
 		"@devshareacademy/eslint-config": "0.0.19",
 		"@devshareacademy/tsconfig": "0.0.3",
+		"@types/lodash": "^4.17.21",
 		"@typescript-eslint/eslint-plugin": "8.20.0",
 		"@typescript-eslint/parser": "8.20.0",
 		"eslint": "9.18.0",
@@ -24,6 +25,7 @@
 	},
 	"dependencies": {
 		"chalk": "^5.6.2",
+		"lodash": "^4.17.21",
 		"phaser": "3.87.0"
 	},
 	"resolutions": {},

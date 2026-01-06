@@ -26,8 +26,22 @@ class ThrowableObjectComponent extends BaseGameObject {
         body.velocity.x = 0;
         body.velocity.y = 0;
 
+        console.log('####** throw direction', DIRECTION);
+
         // depending on direction that we phase -> throw
         if (DIRECTION.isMovingDown) {
+            (body as Phaser.Physics.Arcade.Body).enable = false;
+            this.gameObject.active = false;
+            this.gameObject.visible = false;
+
+            body.checkCollision.none = true;
+
+            this.gameObject.scene.time.delayedCall(50, () => {
+                body.checkCollision.none = false;
+                this.gameObject.active = true;
+                this.gameObject.visible = true;
+            });
+
             body.velocity.y = THROW_SPEED;
         } else if (DIRECTION.isMovingUp) {
             body.velocity.y = -THROW_SPEED;

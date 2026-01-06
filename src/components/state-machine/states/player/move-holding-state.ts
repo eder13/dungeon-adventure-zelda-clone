@@ -26,6 +26,7 @@ class MoveHoldingState extends AbstractMovableState {
 
         if (!heldGameObjectComponent) {
             this.stateMachine.setState(PlayerStates.IDLE);
+            DIRECTION.isPlayerMoving = false;
             return;
         }
 
@@ -34,21 +35,25 @@ class MoveHoldingState extends AbstractMovableState {
                 this.gameObject.x,
                 this.gameObject.y - 10,
             );
+            DIRECTION.isPlayerMoving = true;
         } else if (DIRECTION.isMovingUp) {
             (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
                 this.gameObject.x + 1,
                 this.gameObject.y - 14,
             );
+            DIRECTION.isPlayerMoving = true;
         } else if (DIRECTION.isMovingRight) {
             (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
                 this.gameObject.x + 2,
                 this.gameObject.y - 12,
             );
+            DIRECTION.isPlayerMoving = true;
         } else if (DIRECTION.isMovingLeft) {
             (heldGameObjectComponent?._object as GameObject | undefined)?.setPosition(
                 this.gameObject.x - 2,
                 this.gameObject.y - 12,
             );
+            DIRECTION.isPlayerMoving = true;
         }
     }
 

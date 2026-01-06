@@ -6,6 +6,7 @@ class InputComponent {
     private attackKey = false;
     private actionKey = false;
     private pauseKey = false;
+    private isLocked = false;
 
     constructor() {}
 
@@ -75,6 +76,14 @@ class InputComponent {
         this.pauseKey = val;
     }
 
+    get locked() {
+        return this.isLocked;
+    }
+
+    set locked(val: boolean) {
+        this.isLocked = val;
+    }
+
     public reset() {
         this.left = false;
         this.right = false;
@@ -83,6 +92,7 @@ class InputComponent {
         this.attackKey = false;
         this.actionKey = false;
         this.pauseKey = false;
+        this.isLocked = false;
     }
 }
 

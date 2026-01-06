@@ -12,6 +12,14 @@ class RunningState extends AbstractMovableState {
     }
 
     onUpdate(args?: unknown[]) {
+        // Wenn gesperrt: keinerlei Input verarbeiten -> Velocity stoppen
+        if (this.gameObject.controls.locked) {
+            this.gameObject.updateVelocity(true, 0);
+            this.gameObject.updateVelocity(false, 0);
+            // optional: this.gameObject.anims.stop(); // falls Animation ebenfalls stoppen soll
+            return;
+        }
+
         if (
             !this.gameObject.controls.isDownDown &&
             !this.gameObject.controls.isUpDown &&
@@ -19,106 +27,113 @@ class RunningState extends AbstractMovableState {
             !this.gameObject.controls.isRightDown
         ) {
             this.stateMachine.setState(PlayerStates.IDLE);
+            DIRECTION.isPlayerMoving = false;
         }
 
-        const objectInteracted = this.checkObjectInteractedWith(this.gameObject.controls);
-        if (objectInteracted) {
-            return;
-        }
-
-        if (this.gameObject.controlsComponent.controls.isDownDown) {
-            DIRECTION.isMovingDown = true;
-            DIRECTION.isMovingUp = false;
-            DIRECTION.isMovingLeft = false;
-            DIRECTION.isMovingRight = false;
-
-            this.gameObject.play(
-                {
-                    key: PlayerAnimation.WALKING_DOWN,
-                    repeat: -1,
-                },
-                true,
-            );
-            this.gameObject.updateVelocity(false, 1);
-        } else if (this.gameObject.controlsComponent.controls.isUpDown) {
-            DIRECTION.isMovingDown = false;
-            DIRECTION.isMovingUp = true;
-            DIRECTION.isMovingLeft = false;
-            DIRECTION.isMovingRight = false;
-
-            this.gameObject.play(
-                {
-                    key: PlayerAnimation.WALKING_UP,
-                    repeat: -1,
-                },
-                true,
-            );
-            this.gameObject.updateVelocity(false, -1);
-        } else {
-            this.gameObject.updateVelocity(false, 0);
-        }
-
-        const isMovingvertically =
-            this.gameObject.controlsComponent.controls.isUpDown ||
-            this.gameObject.controlsComponent.controls.isDownDown;
-
-        if (this.gameObject.controlsComponent.controls.isLeftDown) {
-            if (DIRECTION.isMovingUp) {
-                DIRECTION.isMovingUpLeft = true;
+        if (!this.gameObject.controls.locked) {
+            const objectInteracted = this.checkObjectInteractedWith(this.gameObject.controls);
+            if (objectInteracted) {
+                return;
             }
-            if (DIRECTION.isMovingDown) {
-                DIRECTION.isMovingDownLeft = true;
-            }
-            DIRECTION.isMovingLeft = true;
-            DIRECTION.isMovingRight = false;
-            DIRECTION.isMovingDownRight = false;
-            DIRECTION.isMovingUpRight = false;
 
-            if (!isMovingvertically) {
-                DIRECTION.isMovingDown = false;
+            if (this.gameObject.controlsComponent.controls.isDownDown) {
+                DIRECTION.isMovingDown = true;
                 DIRECTION.isMovingUp = false;
+                DIRECTION.isMovingLeft = false;
+                DIRECTION.isMovingRight = false;
 
                 this.gameObject.play(
                     {
-                        key: PlayerAnimation.WALKING_LEFT,
+                        key: PlayerAnimation.WALKING_DOWN,
                         repeat: -1,
                     },
                     true,
                 );
+                this.gameObject.updateVelocity(false, 1);
+                DIRECTION.isPlayerMoving = true;
+            } else if (this.gameObject.controlsComponent.controls.isUpDown) {
+                DIRECTION.isMovingDown = false;
+                DIRECTION.isMovingUp = true;
+                DIRECTION.isMovingLeft = false;
+                DIRECTION.isMovingRight = false;
+
+                this.gameObject.play(
+                    {
+                        key: PlayerAnimation.WALKING_UP,
+                        repeat: -1,
+                    },
+                    true,
+                );
+                this.gameObject.updateVelocity(false, -1);
+                DIRECTION.isPlayerMoving = true;
+            } else {
+                this.gameObject.updateVelocity(false, 0);
             }
 
-            this.gameObject.updateVelocity(true, -1);
-        } else if (this.gameObject.controlsComponent.controls.isRightDown) {
-            if (DIRECTION.isMovingUp) {
-                DIRECTION.isMovingUpRight = true;
-            }
-            if (DIRECTION.isMovingDown) {
-                DIRECTION.isMovingDownRight = true;
-            }
-            DIRECTION.isMovingRight = true;
-            DIRECTION.isMovingLeft = false;
-            DIRECTION.isMovingDownLeft = false;
-            DIRECTION.isMovingUpLeft = false;
+            const isMovingvertically =
+                this.gameObject.controlsComponent.controls.isUpDown ||
+                this.gameObject.controlsComponent.controls.isDownDown;
 
-            if (!isMovingvertically) {
+            if (this.gameObject.controlsComponent.controls.isLeftDown) {
+                if (DIRECTION.isMovingUp) {
+                    DIRECTION.isMovingUpLeft = true;
+                }
+                if (DIRECTION.isMovingDown) {
+                    DIRECTION.isMovingDownLeft = true;
+                }
+                DIRECTION.isMovingLeft = true;
+                DIRECTION.isMovingRight = false;
                 DIRECTION.isMovingDownRight = false;
                 DIRECTION.isMovingUpRight = false;
+
+                if (!isMovingvertically) {
+                    DIRECTION.isMovingDown = false;
+                    DIRECTION.isMovingUp = false;
+
+                    this.gameObject.play(
+                        {
+                            key: PlayerAnimation.WALKING_LEFT,
+                            repeat: -1,
+                        },
+                        true,
+                    );
+                }
+
+                this.gameObject.updateVelocity(true, -1);
+                DIRECTION.isPlayerMoving = true;
+            } else if (this.gameObject.controlsComponent.controls.isRightDown) {
+                if (DIRECTION.isMovingUp) {
+                    DIRECTION.isMovingUpRight = true;
+                }
+                if (DIRECTION.isMovingDown) {
+                    DIRECTION.isMovingDownRight = true;
+                }
+                DIRECTION.isMovingRight = true;
+                DIRECTION.isMovingLeft = false;
                 DIRECTION.isMovingDownLeft = false;
                 DIRECTION.isMovingUpLeft = false;
-                DIRECTION.isMovingDown = false;
-                DIRECTION.isMovingUp = false;
 
-                this.gameObject.play(
-                    {
-                        key: PlayerAnimation.WALKING_RIGHT,
-                        repeat: -1,
-                    },
-                    true,
-                );
+                if (!isMovingvertically) {
+                    DIRECTION.isMovingDownRight = false;
+                    DIRECTION.isMovingUpRight = false;
+                    DIRECTION.isMovingDownLeft = false;
+                    DIRECTION.isMovingUpLeft = false;
+                    DIRECTION.isMovingDown = false;
+                    DIRECTION.isMovingUp = false;
+
+                    this.gameObject.play(
+                        {
+                            key: PlayerAnimation.WALKING_RIGHT,
+                            repeat: -1,
+                        },
+                        true,
+                    );
+                }
+                this.gameObject.updateVelocity(true, 1);
+                DIRECTION.isPlayerMoving = true;
+            } else {
+                this.gameObject.updateVelocity(true, 0);
             }
-            this.gameObject.updateVelocity(true, 1);
-        } else {
-            this.gameObject.updateVelocity(true, 0);
         }
     }
 

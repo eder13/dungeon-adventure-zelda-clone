@@ -26,7 +26,7 @@ export class Chest extends Phaser.Physics.Arcade.Image {
 
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
-        this.setOrigin(0, 1).setImmovable(true);
+        this.setOrigin(0, 1).setImmovable(true).setDepth(56);
 
         this.state = config.chestState ?? CHEST_STATE.REVEALED;
         this.#isBossKeyChest = config.requireBossKey;

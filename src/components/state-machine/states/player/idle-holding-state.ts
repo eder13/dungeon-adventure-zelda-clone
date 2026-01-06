@@ -10,6 +10,8 @@ class IdleHoldingState extends AbstractMovableState {
     }
 
     onEnter(args?: unknown[]) {
+        DIRECTION.isPlayerMoving = false;
+
         if (DIRECTION.isMovingDown) {
             this.gameObject.play(
                 {

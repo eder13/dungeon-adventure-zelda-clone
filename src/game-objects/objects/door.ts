@@ -1,3 +1,4 @@
+import { DEBUG_COLLISION_DOOR_TRANSITION_ZONE } from '../../common/globals';
 import { Direction, TiledDoorObject } from '../../common/tiled/types';
 import { CustomGameObject, Position } from '../../common/types';
 
@@ -20,7 +21,9 @@ class Door implements CustomGameObject {
         this.position = { x: config.x, y: config.y };
         this.targetLevel = config.targetLevel;
         this.doorTransitionZone = this.createDoorTransitionZone(config);
-        this.debugDoorTransitionZone = this.createDebugDoorTransitionZone(config);
+        this.debugDoorTransitionZone = DEBUG_COLLISION_DOOR_TRANSITION_ZONE
+            ? this.createDebugDoorTransitionZone(config)
+            : undefined;
         this.direction = config.direction;
 
         this.scene.physics.world.enable(this.doorTransitionZone);

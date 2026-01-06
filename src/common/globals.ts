@@ -1,7 +1,8 @@
 export const LOG_ENABLED_STATE = false;
 
-export const DEBUG_COLLISION_PLAYER_TILEMAP = true;
+export const DEBUG_COLLISION_PLAYER_TILEMAP = false;
 export const DEBUG_COLLISION_ENEMY_TILEMAP = false;
+export const DEBUG_COLLISION_DOOR_TRANSITION_ZONE = false;
 
 export const DIRECTION = {
     isMovingRight: false,
@@ -14,6 +15,8 @@ export const DIRECTION = {
     isMovingDownRight: false,
     isMovingDownLeft: false,
     isMovingUpLeft: false,
+
+    isPlayerMoving: false,
 };
 
 export const DIRECTION_SPIDER = {
@@ -73,3 +76,11 @@ export const LEVEL_NAME = {
     WORLD: 'WORLD',
     DUNGEON_1: 'DUNGEON_1',
 } as const;
+
+export const DELAY_DOOR_TRANSITION_DISABLED_COLLISION_OVERLAP_AND_LOCK_INPUT = 500;
+
+export const DURATION_TWEEN_FOCUS_PLAYER_CAMERA = 500;
+export const DELAY_TWEEN_FOCUS_PLAYER_CAMERA = 100;
+
+export const DURATION_BETWEEN_FOCUS_ROOM_CAMERA = 500;
+export const DELAY_BETWEEN_FOCUS_ROOM_CAMERA = 100;
