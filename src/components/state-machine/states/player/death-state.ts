@@ -1,4 +1,5 @@
 import { PlayerAnimation } from '../../../../common/assets';
+import { EVENT_BUS, Events } from '../../../../common/events';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -45,6 +46,7 @@ class DeathStatePlayer extends AbstractMovableState {
     onDefeat() {
         (this.gameObject as Player).disableObject();
         this.onDieCallback();
+        EVENT_BUS.emit(Events.PLAYER_DEFEATED, this.gameObject);
     }
 
     onUpdate(args?: unknown[]) {}

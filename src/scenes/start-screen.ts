@@ -1,0 +1,71 @@
+import * as Phaser from 'phaser';
+import { SCENE_KEYS } from './scene-keys';
+import { ASSET_KEYS } from '../common/assets';
+import KeyboardInput from '../components/input-component/keyboard';
+import DataManager from '../components/data-manager/data-manager';
+import { LevelData } from '../common/types';
+import { LEVEL_NAME } from '../common/globals';
+
+export class StartScreen extends Phaser.Scene {
+    cursor!: Phaser.GameObjects.Image;
+    keyboardInput!: KeyboardInput;
+
+    constructor() {
+        super({
+            key: SCENE_KEYS.START_SCREEN,
+        });
+    }
+
+    public create(): void {
+        this.add
+            .text(this.scale.width / 2, 100, 'Dungeon Adventure', {
+                fontSize: '32px',
+                align: 'center',
+            })
+            .setOrigin(0.5);
+
+        this.add
+            .text(this.scale.width / 2, 180, 'Controls:', {
+                fontSize: '16px',
+                align: 'center',
+            })
+            .setOrigin(0.5);
+        this.add
+            .text(this.scale.width / 2, 200, 'Arrow keys to move, Space to attack ', {
+                fontSize: '16px',
+                align: 'center',
+            })
+            .setOrigin(0.5);
+        this.add
+            .text(this.scale.width / 2, 220, 'E + Arrow keys to interact, ESC Pause, Enter Select', {
+                fontSize: '16px',
+                align: 'center',
+            })
+            .setOrigin(0.5);
+        this.add
+            .text(this.scale.width / 2, 320, 'Start', {
+                fontSize: '16px',
+                align: 'center',
+            })
+            .setOrigin(0.5);
+
+        this.cursor = this.add.image(270, 320, ASSET_KEYS.UI_CURSOR).setOrigin(0.5);
+
+        if (this.input.keyboard) {
+            this.keyboardInput = new KeyboardInput(this.input.keyboard);
+        }
+    }
+
+    update(): void {
+        if (this.keyboardInput.isEnterKeyDown) {
+            DataManager.getInstance().reset();
+            const levelData: LevelData = {
+                level: LEVEL_NAME.DUNGEON_1,
+                doorId: 1,
+                roomId: 3,
+            };
+
+            this.scene.start(SCENE_KEYS.GAME_SCENE, levelData);
+        }
+    }
+}

@@ -24,7 +24,6 @@ type ChestConfig = {
     chestState?: ChestState;
 };
 
-// image because we dont need animations for chests
 export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObject {
     state: ChestState;
     #isBossKeyChest: boolean;
@@ -48,22 +47,17 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
         this._revealTrigger = config.revealTrigger;
         this.state = config.chestState ?? CHEST_STATE.HIDDEN;
         this.#isBossKeyChest = config.requireBossKey;
-
-        console.log('#####** this.#isBossKeyChest', this.#isBossKeyChest);
-
         this._contents = config.contents;
 
         if (this.#isBossKeyChest) {
             this.physicsBody.setSize(32, 24, true).setOffset(0, 8);
         }
 
-        // components
         this._interactiveObjectComponent = new InteractiveObjectComponent(
             this,
             INTERACTIVE_OBJECT_TYPE.OPEN,
             () => {
                 if (this.#isBossKeyChest) {
-                    // TODO: Make sure the player has the boss key
                     return true;
                 }
 
@@ -110,7 +104,7 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
         if (this._contents === CHEST_REWARD.NOTHING) {
             this._rewardObject = undefined;
 
-            // TODO: Show Empty message
+            EVENT_BUS.emit(Events.SHOW_DIALOG, 'The chest was empty?');
         } else {
             this._rewardObject = this.scene.physics.add
                 .image(
@@ -145,8 +139,17 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
 
             InventoryManager.getInstance().addKey(this.contents === CHEST_REWARD.SMALL_KEY ? 'standard' : 'boss');
 
-            // TODO: Show Message on what you found
+            EVENT_BUS.emit(
+                Events.SHOW_DIALOG,
+                this.contents === CHEST_REWARD.SMALL_KEY ? 'You found a small key!' : 'You found the boss key!',
+            );
+
+            InventoryManager.getInstance().addKey(this.contents === CHEST_REWARD.SMALL_KEY ? 'standard' : 'boss');
         }
+
+        this.scene.time.delayedCall(DURATION_FREEZE_SHOW_ITEM_REVEALED_CHEST, () => {
+            EVENT_BUS.emit(Events.HIDE_DIALOG);
+        });
 
         this.state = CHEST_STATE.OPEN;
         const frameKey = this.#isBossKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
@@ -156,9 +159,6 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
     }
 
     public revealChest(): void {
-        console.log('#####** this.revealChest');
-        console.log('#####** this.revealChest this.state', this.state);
-
         if (this.state !== CHEST_STATE.HIDDEN) {
             return;
         }

@@ -5,6 +5,7 @@ class KeyboardInput extends InputComponent {
     cursorKeyboard: Phaser.Types.Input.Keyboard.CursorKeys;
     actionKeyboard: Phaser.Input.Keyboard.Key;
     pauseKeyboard: Phaser.Input.Keyboard.Key;
+    enterKeyboard: Phaser.Input.Keyboard.Key;
 
     constructor(keyboardPlugin: Phaser.Input.Keyboard.KeyboardPlugin) {
         super();
@@ -17,6 +18,8 @@ class KeyboardInput extends InputComponent {
         this.actionKeyboard = keyboardPlugin.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         // Pause: Escape
         this.pauseKeyboard = keyboardPlugin.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        // Select: Enter
+        this.enterKeyboard = keyboardPlugin.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     }
 
     get isUpDown(): boolean {
@@ -53,6 +56,10 @@ class KeyboardInput extends InputComponent {
 
     get isPauseKeyDown(): boolean {
         return Phaser.Input.Keyboard.JustDown(this.pauseKeyboard);
+    }
+
+    get isEnterKeyDown(): boolean {
+        return Phaser.Input.Keyboard.JustDown(this.enterKeyboard);
     }
 }
 

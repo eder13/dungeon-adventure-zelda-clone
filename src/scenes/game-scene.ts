@@ -9,7 +9,6 @@ import Spider from '../game-objects/enemies/spider';
 import Saw from '../game-objects/enemies/saw';
 import {
     BLOB_HEALTH,
-    CHEST_STATE,
     DEBUG_COLLISION_ENEMY_TILEMAP,
     DEBUG_COLLISION_PLAYER_TILEMAP,
     DELAY_BETWEEN_FOCUS_ROOM_CAMERA,
@@ -55,7 +54,6 @@ export class GameScene extends Phaser.Scene {
     controls!: InputComponent;
     enemyGroup!: Phaser.GameObjects.Group;
     blockingGroup!: Phaser.GameObjects.Group;
-    fpsText!: HTMLElement | null;
     levelData!: LevelData;
     objectsByRoomId!: {
         [key: number]: {
@@ -85,8 +83,6 @@ export class GameScene extends Phaser.Scene {
     buttonGroup!: Phaser.GameObjects.Group;
     buttonOverlapCollider!: Phaser.Physics.Arcade.Collider;
 
-    private lastFpsUpdate = 0;
-
     private _freezeState = {
         enemies: new Map<Phaser.GameObjects.GameObject, { active: boolean; bodyEnabled: boolean }>(),
         pausedTweensByEnemy: new Map<Phaser.GameObjects.GameObject, Phaser.Tweens.Tween[]>(),
@@ -100,7 +96,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     public init(data): void {
-        this.fpsText = document.getElementById('fps');
         this.initZoom();
         console.log('#####** init data', data);
 
@@ -355,14 +350,15 @@ export class GameScene extends Phaser.Scene {
 
         // run scenes in paralell (UI on top of scene)
         this.scene.launch(SCENE_KEYS.UI_SCENE);
-    }
 
-    update(time: number, delta: number): void {
-        // throttle FPS DOM update to reduce work (update ~4x/sec)
-        if (this.fpsText && time - this.lastFpsUpdate > 250) {
-            this.fpsText.innerHTML = `${Math.floor(this.game.loop.actualFps)}`;
-            this.lastFpsUpdate = time;
-        }
+        this.input.keyboard.on('keydown-ESC', () => {
+            if (this.scene.isActive(SCENE_KEYS.PAUSE_MENU)) return;
+            if (this.scene.isActive(SCENE_KEYS.START_SCREEN)) return;
+            if (this.scene.isActive(SCENE_KEYS.GAME_OVER_SCENE)) return;
+            if (this.scene.isActive(SCENE_KEYS.PRELOAD_SCENE)) return;
+            this.scene.launch(SCENE_KEYS.PAUSE_MENU, { pausedScene: SCENE_KEYS.GAME_SCENE });
+            this.scene.pause(SCENE_KEYS.GAME_SCENE);
+        });
     }
 
     createRoomObjects(map: Phaser.Tilemaps.Tilemap, layerName: string) {
@@ -528,16 +524,13 @@ export class GameScene extends Phaser.Scene {
         // collision betweem player and other gameobjects
         this.physics.add.overlap(this.player, this.enemyGroup, (player, enemy) => {
             this.player.hit(1);
-
-            // just for testing, remove afterwards for spider
-            if (enemy instanceof Spider) {
-                enemy.hit(1);
-            }
         });
 
         this.physics.add.overlap(this.player, this.entryDoor.doorTransitionZone, () => {
-            // TODO: Show Text "your adventure just started you can not leave now!"
-            console.log('##### ENTRY via zone!');
+            EVENT_BUS.emit(Events.SHOW_DIALOG, 'Your adventure just started! You cannot leave now.');
+            this.time.delayedCall(2000, () => {
+                EVENT_BUS.emit(Events.HIDE_DIALOG);
+            });
         });
 
         // collision between player and blocking group
@@ -665,6 +658,18 @@ export class GameScene extends Phaser.Scene {
         );
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             EVENT_BUS.off(Events.ENEMY_DEFEATED, () => {}, this);
+        });
+
+        EVENT_BUS.on(
+            Events.PLAYER_DEFEATED,
+            (player: Player) => {
+                Logger.info(`[event]: ${Events.PLAYER_DEFEATED}, args=${JSON.stringify(player)}`);
+                this.handlePlayerDefeated(player);
+            },
+            this,
+        );
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            EVENT_BUS.off(Events.PLAYER_DEFEATED, () => {}, this);
         });
     }
 
@@ -905,7 +910,19 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    handleAllEnemiesDefeatedForRoom() {
+    private handlePlayerDefeated(player: Player) {
+        console.log('[player defeated] Player defeated:', player);
+
+        // Handle player defeat logic
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+        this.cameras.main.once('camerafadeoutcomplete', () => {
+            this.scene.start(SCENE_KEYS.GAME_OVER_SCENE);
+            this.scene.stop(SCENE_KEYS.UI_SCENE);
+        });
+    }
+
+    private handleAllEnemiesDefeatedForRoom() {
         console.log('[enemies defeated] All enemies defeated in room:', this.currentRoomId);
 
         // open Doors again

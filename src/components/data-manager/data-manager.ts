@@ -5,6 +5,7 @@ class DataManager {
     private static instance: DataManager;
     _maxLives: number = PLAYER_HEALTH;
     _currentLives: number = PLAYER_HEALTH;
+    _time: string = '';
 
     static getInstance(): DataManager {
         if (!DataManager.instance) {
@@ -15,6 +16,14 @@ class DataManager {
 
     get maxLives(): number {
         return this._maxLives;
+    }
+
+    set time(value: string) {
+        this._time = value;
+    }
+
+    get time(): string {
+        return this._time;
     }
 
     public reset(): void {

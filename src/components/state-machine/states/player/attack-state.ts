@@ -40,18 +40,13 @@ class AttackState extends AbstractMovableState {
         super(PlayerStates.ATTACK, gameObject);
     }
 
-    onEnter(args?: unknown[]) {
-        this.attackStarted = false;
-        this.ensureWeapon();
-    }
-
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
-    onUpdate(args?: unknown[]) {
-        if (this.attackStarted) return;
+    onEnter(args?: unknown[]) {
+        this.ensureWeapon();
+
         this.attackStarted = true;
         this.gameObject.invulnerableComponent.invulnerable = true;
 

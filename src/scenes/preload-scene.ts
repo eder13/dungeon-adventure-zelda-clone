@@ -24,7 +24,7 @@ export class PreloadScene extends Phaser.Scene {
         };
 
         this.createAnimations();
-        this.scene.start(SCENE_KEYS.GAME_SCENE, levelData);
+        this.scene.start(SCENE_KEYS.START_SCREEN, levelData);
     }
 
     createAnimations() {
