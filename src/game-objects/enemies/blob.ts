@@ -5,6 +5,7 @@ import ControlsComponent from '../../components/game-object/controls-component';
 import StateMachine from '../../components/state-machine/state-machine';
 import { BlobStates } from '../../components/state-machine/states/states';
 import {
+    ATTACK_DIRECTION,
     BLOB_HURT_PUSHBACK_SPEED,
     DELAY_BLOB_CHANGE_DIRECTION_MAX,
     DELAY_BLOB_CHANGE_DIRECTION_MIN,
@@ -141,7 +142,7 @@ class Blob extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    public hit(damage: number, hitDirection?: Direction) {
+    public hit(damage: number, hitDirection?: typeof ATTACK_DIRECTION) {
         if (this.invulnerableComponent.invulnerable) {
             return;
         }

@@ -14,6 +14,8 @@ class DeathStateBlob extends AbstractMovableState {
     }
 
     onEnter(args?: unknown[]) {
+        (this.gameObject.body as Phaser.Physics.Arcade.Body).enable = false;
+
         this.gameObject.updateVelocity(true, 0);
         this.gameObject.updateVelocity(false, 0);
 

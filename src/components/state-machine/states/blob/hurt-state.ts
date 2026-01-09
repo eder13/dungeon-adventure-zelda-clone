@@ -1,4 +1,4 @@
-import { DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
+import { ATTACK_DIRECTION, DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
 import { BlobStates } from '../states';
 import AbstractMovableState from '../../base/abstract-movable-state';
 import Blob from '../../../../game-objects/enemies/blob';
@@ -22,7 +22,9 @@ class HurtStateBlob extends AbstractMovableState {
     }
 
     onEnter(args?: unknown[]) {
-        const hitDirection = args?.[0] as Direction;
+        const hitDirection = args?.[0] as typeof ATTACK_DIRECTION | undefined;
+
+        console.log('[hitDirection BLOB]', hitDirection);
 
         const body = this.gameObject.body as Phaser.Physics.Arcade.Body;
         body.velocity.x = 0;
@@ -30,13 +32,13 @@ class HurtStateBlob extends AbstractMovableState {
 
         if (hitDirection) {
             // player used sword against enemy
-            if (hitDirection === DIRECTION_HIT.UP) {
+            if (hitDirection.UP) {
                 body.velocity.y = -this.hurtPushbackSpeed;
-            } else if (hitDirection === DIRECTION_HIT.DOWN) {
+            } else if (hitDirection.DOWN) {
                 body.velocity.y = this.hurtPushbackSpeed;
-            } else if (hitDirection === DIRECTION_HIT.LEFT) {
+            } else if (hitDirection.LEFT) {
                 body.velocity.x = -this.hurtPushbackSpeed;
-            } else if (hitDirection === DIRECTION_HIT.RIGHT) {
+            } else if (hitDirection.RIGHT) {
                 body.velocity.x = this.hurtPushbackSpeed;
             }
         } else {

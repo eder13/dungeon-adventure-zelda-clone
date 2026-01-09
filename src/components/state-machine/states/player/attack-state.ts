@@ -1,5 +1,5 @@
 import { PlayerAnimation } from '../../../../common/assets';
-import { BLOCK_ATTACK_MOVEMENT, DIRECTION } from '../../../../common/globals';
+import { ATTACK_DIRECTION, BLOCK_ATTACK_MOVEMENT, DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
@@ -66,14 +66,40 @@ class AttackState extends AbstractMovableState {
             right: { dx: 5, dy: 2, anim: PlayerAnimation.ATTACK_RIGHT, direction: DIRECTION_HIT.RIGHT },
         };
 
-        let key = OFFSETS.down;
+        let key: { dx: number; dy: number; anim: string; flip?: boolean; direction: string } | undefined;
+
         if (DIRECTION.isMovingUp) key = OFFSETS.up;
         else if (DIRECTION.isMovingLeft) key = OFFSETS.left;
         else if (DIRECTION.isMovingRight) key = OFFSETS.right;
+        else if (DIRECTION.isMovingDown) key = OFFSETS.down;
+
+        if (key) {
+            if (key.direction === DIRECTION_HIT.DOWN) {
+                ATTACK_DIRECTION.DOWN = true;
+                ATTACK_DIRECTION.LEFT = false;
+                ATTACK_DIRECTION.RIGHT = false;
+                ATTACK_DIRECTION.UP = false;
+            } else if (key.direction === DIRECTION_HIT.UP) {
+                ATTACK_DIRECTION.UP = true;
+                ATTACK_DIRECTION.LEFT = false;
+                ATTACK_DIRECTION.RIGHT = false;
+                ATTACK_DIRECTION.DOWN = false;
+            } else if (key.direction === DIRECTION_HIT.LEFT) {
+                ATTACK_DIRECTION.LEFT = true;
+                ATTACK_DIRECTION.UP = false;
+                ATTACK_DIRECTION.RIGHT = false;
+                ATTACK_DIRECTION.DOWN = false;
+            } else if (key.direction === DIRECTION_HIT.RIGHT) {
+                ATTACK_DIRECTION.RIGHT = true;
+                ATTACK_DIRECTION.UP = false;
+                ATTACK_DIRECTION.LEFT = false;
+                ATTACK_DIRECTION.DOWN = false;
+            }
+        }
 
         // positioniere Weapon und zeige sie
-        this.weapon.setPosition(this.gameObject.x + key.dx, this.gameObject.y + key.dy);
-        this.weapon.setFlipX(!!key.flip);
+        this.weapon.setPosition(this.gameObject.x + (key?.dx ?? 0), this.gameObject.y + (key?.dy ?? 0));
+        this.weapon.setFlipX(!!key?.flip);
         this.weapon.setVisible(true);
 
         // hide player visuals but keep physics body active
@@ -91,14 +117,20 @@ class AttackState extends AbstractMovableState {
             const enemies = (this.gameObject.scene as any).enemyGroup as Phaser.GameObjects.Group | undefined;
             if (enemies) {
                 this.weaponCollider = this.gameObject.scene.physics.add.overlap(this.weapon, enemies, (w, e) => {
+                    console.log('[hitDirection] #####** ATTACK_DIRECTION inside--!', ATTACK_DIRECTION);
+
                     // z. B. hit auf Enemy
-                    (e as any).hit?.(1, key.direction);
+                    (e as any).hit?.(1, ATTACK_DIRECTION);
                 });
             }
         }
 
         // spiele Weapon-Animation (non-looping)
-        this.weapon.play({ key: key.anim, repeat: 0 }, true);
+        this.weapon.play({ key: key?.anim ?? '', repeat: 0 }, true);
+
+        console.log('[hitDirection] #####** key.direction outside', key?.direction);
+        console.log('[hitDirection] #####** ATTACK_DIRECTION outside', ATTACK_DIRECTION);
+
         this.weapon.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (animation: Phaser.Animations.Animation) => {
             console.log('***** Attack animation complete - unlocking movement', animation.key);
 
@@ -114,7 +146,7 @@ class AttackState extends AbstractMovableState {
 
         // hide + disable body wenn Animation fertig
         this.weapon.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (anim: Phaser.Animations.Animation) => {
-            if (anim.key !== key.anim) return;
+            if (anim.key !== key?.anim) return;
             this.weapon.setVisible(false);
             if (wBody) {
                 wBody.setVelocity(0, 0);

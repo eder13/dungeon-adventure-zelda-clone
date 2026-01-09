@@ -3,7 +3,7 @@ import { SCENE_KEYS } from './scene-keys';
 import { ASSET_KEYS, ASSET_PACK_KEYS, PlayerAnimation } from '../common/assets';
 import { LEVEL_NAME, PLAYER_HEALTH } from '../common/globals';
 import { LevelData } from '../common/types';
-import DataManager from '../components/data-manager/DataManager';
+import DataManager from '../components/data-manager/data-manager';
 import { EVENT_BUS, Events } from '../common/events';
 import Logger from '../common/logger';
 

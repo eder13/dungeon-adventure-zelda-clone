@@ -19,6 +19,13 @@ export const DIRECTION = {
     isPlayerMoving: false,
 };
 
+export const ATTACK_DIRECTION = {
+    DOWN: false,
+    UP: false,
+    LEFT: false,
+    RIGHT: false,
+};
+
 export const BLOCK_ATTACK_MOVEMENT = {
     blockAttackMovement: false,
 };
@@ -61,7 +68,7 @@ export const TWEEN_SCALE_X_PULSE = 0.8;
 export const TWEEN_SCALE_Y_PULSE = 0.8;
 export const TWEEN_DURATION = 500;
 
-export const BLOB_HURT_PUSHBACK_SPEED = 70;
+export const BLOB_HURT_PUSHBACK_SPEED = 200;
 
 export const DELAY_BLOB_CHANGE_DIRECTION_MIN = 200;
 export const DELAY_BLOB_CHANGE_DIRECTION_MAX = 800;
@@ -76,7 +83,7 @@ export const PLAYER_INVULNERABLE_DURATION = 500;
 export const SAW_INVULNERABLE_DURATION = Infinity;
 
 export const PUSH_BACK_SPEED = 100;
-export const SPIDER_HURT_PUSHBACK_SPEED = 50;
+export const SPIDER_HURT_PUSHBACK_SPEED = 100;
 export const DELAYED_PUSH_BACK_HURT_RESET = 200;
 
 export const PLAYER_HEALTH = 12;

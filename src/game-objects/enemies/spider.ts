@@ -5,6 +5,7 @@ import ControlsComponent from '../../components/game-object/controls-component';
 import StateMachine from '../../components/state-machine/state-machine';
 import { SpiderStates } from '../../components/state-machine/states/states';
 import {
+    ATTACK_DIRECTION,
     DELAY_SPIDER_CHANGE_DIRECTION_MAX,
     DELAY_SPIDER_CHANGE_DIRECTION_MIN,
     DELAY_SPIDER_CHANGE_DIRECTION_WAIT,
@@ -142,7 +143,7 @@ class Spider extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    public hit(damage: number, hitDirection?: Direction) {
+    public hit(damage: number, hitDirection?: typeof ATTACK_DIRECTION) {
         if (this.invulnerableComponent.invulnerable) {
             return;
         }

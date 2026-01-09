@@ -21,7 +21,7 @@ import ObjectHeldComponent from '../../components/game-object/object-held-compon
 import ThrowableObjectComponent from '../../components/game-object/throwable-object-component';
 import ThrowState from '../../components/state-machine/states/player/throw-state';
 import AttackState from '../../components/state-machine/states/player/attack-state';
-import DataManager from '../../components/data-manager/DataManager';
+import DataManager from '../../components/data-manager/data-manager';
 
 export interface PlayerConfig {
     scene: Phaser.Scene;
