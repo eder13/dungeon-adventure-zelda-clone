@@ -71,7 +71,7 @@ export const PUSH_BACK_SPEED = 100;
 export const SPIDER_HURT_PUSHBACK_SPEED = 50;
 export const DELAYED_PUSH_BACK_HURT_RESET = 200;
 
-export const PLAYER_HEALTH = 5;
+export const PLAYER_HEALTH = 300;
 export const SPIDER_HEALTH = 2;
 
 export const CHEST_STATE = {
@@ -103,3 +103,10 @@ export const DURATION_BETWEEN_FOCUS_ROOM_CAMERA = 500;
 export const DELAY_BETWEEN_FOCUS_ROOM_CAMERA = 100;
 
 export const FREEZE_TIME_ENEMIES_ROOM_TRANSITION = 800;
+
+export const WORLD_FREEZE_STATE = { isFrozen: false };
+export const WORLD_FREEZE_STATE_PLAYER = { isFrozen: false };
+
+export const DURATION_FREEZE_SHOW_ITEM_REVEALED_CHEST = 3000;
+export const DELAY_BEFORE_ITEM_REVEALED_MOVE_UP = 200;
+export const DELAY_BEFORE_ITEM_STOP = 200;

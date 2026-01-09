@@ -11,6 +11,7 @@ import {
     SPEED_PLAYER,
     SPEED_SPIDER,
     SPIDER_HURT_PUSHBACK_SPEED,
+    WORLD_FREEZE_STATE,
 } from '../../common/globals';
 import IdleStateSpider from '../../components/state-machine/states/spider/idle-state';
 import RunningStateSpider from '../../components/state-machine/states/spider/running-state';

@@ -1,11 +1,18 @@
 import * as Phaser from 'phaser';
 import { ChestState, CustomGameObject, Position } from '../../common/types';
 import { ASSET_KEYS, CHEST_FRAME_KEYS } from '../../common/assets';
-import { CHEST_STATE, INTERACTIVE_OBJECT_TYPE } from '../../common/globals';
+import {
+    CHEST_STATE,
+    DELAY_BEFORE_ITEM_REVEALED_MOVE_UP,
+    DELAY_BEFORE_ITEM_STOP,
+    DURATION_FREEZE_SHOW_ITEM_REVEALED_CHEST,
+    INTERACTIVE_OBJECT_TYPE,
+} from '../../common/globals';
 import InteractiveObjectComponent from '../../components/game-object/interactive-object-compoent';
 import { EVENT_BUS, Events } from '../../common/events';
-import { TRAP_TYPE } from '../../common/tiled/common';
+import { CHEST_REWARD, TRAP_TYPE } from '../../common/tiled/common';
 import { ChestReward } from '../../common/tiled/types';
+import InventoryManager from '../../components/inventory/inventory';
 
 type ChestConfig = {
     scene: Phaser.Scene;
@@ -25,6 +32,7 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
     _revealTrigger: keyof typeof TRAP_TYPE;
     _contents: ChestReward;
     _id: number;
+    _rewardObject: Phaser.Physics.Arcade.Image | undefined;
 
     constructor(config: ChestConfig) {
         const frameKey = config.requireBossKey
@@ -34,12 +42,15 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
 
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
-        this.setOrigin(0, 1).setImmovable(true).setDepth(5);
+        this.setOrigin(0, 1).setImmovable(true).setDepth(2);
 
         this._id = config.id;
         this._revealTrigger = config.revealTrigger;
         this.state = config.chestState ?? CHEST_STATE.HIDDEN;
         this.#isBossKeyChest = config.requireBossKey;
+
+        console.log('#####** this.#isBossKeyChest', this.#isBossKeyChest);
+
         this._contents = config.contents;
 
         if (this.#isBossKeyChest) {
@@ -90,10 +101,51 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
     }
 
     public open(): void {
-        console.log('+++++ this.open');
-
         if (this.state !== CHEST_STATE.REVEALED) {
             return;
+        }
+
+        (this.scene as any).freezeWorldWithPlayer(DURATION_FREEZE_SHOW_ITEM_REVEALED_CHEST);
+
+        if (this._contents === CHEST_REWARD.NOTHING) {
+            this._rewardObject = undefined;
+
+            // TODO: Show Empty message
+        } else {
+            this._rewardObject = this.scene.physics.add
+                .image(
+                    this.x + this.width / 2,
+                    this.y - 20,
+                    this.contents === CHEST_REWARD.SMALL_KEY ? ASSET_KEYS.SMALL_KEY : ASSET_KEYS.BOSS_KEY,
+                    0,
+                )
+                .setImmovable(true)
+                .setDepth(4)
+                .setName(`${this.id.toString(10)}-reward-small-key`);
+
+            this.scene.time.delayedCall(DELAY_BEFORE_ITEM_REVEALED_MOVE_UP, () => {
+                if (this._rewardObject?.body) {
+                    this._rewardObject.body.velocity.set(0, -100);
+                }
+
+                this.scene.time.delayedCall(DELAY_BEFORE_ITEM_STOP, () => {
+                    if (this._rewardObject?.body) {
+                        this._rewardObject.body.velocity.set(0, 0);
+                    }
+                });
+            });
+
+            this.scene.time.delayedCall(DURATION_FREEZE_SHOW_ITEM_REVEALED_CHEST, () => {
+                if (this._rewardObject?.body) {
+                    (this._rewardObject.body as Phaser.Physics.Arcade.Body).enable = false;
+                    this._rewardObject.visible = false;
+                    this._rewardObject.active = false;
+                }
+            });
+
+            InventoryManager.getInstance().addKey(this.contents === CHEST_REWARD.SMALL_KEY ? 'standard' : 'boss');
+
+            // TODO: Show Message on what you found
         }
 
         this.state = CHEST_STATE.OPEN;

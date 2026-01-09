@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="120" height="68" tilewidth="16" tileheight="16" infinite="0" nextlayerid="47" nextobjectid="81">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="120" height="68" tilewidth="16" tileheight="16" infinite="0" nextlayerid="48" nextobjectid="91">
  <editorsettings>
-  <export target="dungeon_1.json" format="json"/>
+  <export target="../../../../../Desktop/dungeon_exported2.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="collision" tilewidth="16" tileheight="16" tilecount="1" columns="1">
   <image source="../tiled/assets/collision.png" width="16" height="16"/>
@@ -234,7 +234,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="9" name="collision" width="120" height="68" visible="0" locked="1" opacity="0.55">
+ <layer id="9" name="collision" width="120" height="68" opacity="0.55">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -285,7 +285,7 @@
 0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,
 0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,
 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,
-0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,
+0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,
 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,
 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,
 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,
@@ -468,6 +468,41 @@
       <property name="type" type="int" value="4"/>
      </properties>
     </object>
+    <object id="81" type="enemy" gid="1" x="1456" y="880" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="82" type="enemy" gid="1" x="1504" y="848" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="84" type="enemy" gid="1" x="1552" y="880" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="86" type="enemy" gid="1" x="1600" y="848" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="87" type="enemy" gid="1" x="1648" y="880" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="88" type="enemy" gid="1" x="1696" y="848" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
+    <object id="89" type="enemy" gid="1" x="1744" y="880" width="16" height="16">
+     <properties>
+      <property name="type" type="int" value="4"/>
+     </properties>
+    </object>
    </objectgroup>
    <objectgroup id="38" name="fire" opacity="0.64">
     <object id="45" gid="1" x="1536" y="976" width="32" height="32"/>
@@ -599,7 +634,7 @@
     <object id="40" gid="1" x="688" y="672" width="16" height="16"/>
     <object id="41" gid="1" x="1216" y="672" width="16" height="16"/>
    </objectgroup>
-   <objectgroup id="34" name="switches" visible="0">
+   <objectgroup id="34" name="switches">
     <object id="37" type="switch" gid="1" x="688" y="416" width="16" height="16">
      <properties>
       <property name="action" propertytype="switchAction" value="OPEN_DOOR"/>
@@ -634,6 +669,9 @@
    </objectgroup>
   </group>
   <group id="16" name="4">
+   <objectgroup id="47" name="pots">
+    <object id="90" gid="1" x="688" y="896" width="16" height="16"/>
+   </objectgroup>
    <objectgroup id="43" name="enemies">
     <object id="58" type="enemy" gid="1" x="832" y="912" width="16" height="16">
      <properties>
@@ -684,7 +722,7 @@
       <property name="trapDoorTrigger" propertytype="trapTrigger" value="ENEMIES_DEFEATED"/>
      </properties>
     </object>
-    <object id="19" type="door" gid="1" x="1248.07" y="879.558" width="8" height="32">
+    <object id="19" type="door" gid="1" x="1248" y="880" width="8" height="32">
      <properties>
       <property name="direction" propertytype="direction" value="RIGHT"/>
       <property name="doorType" propertytype="doorType" value="LOCK"/>
@@ -739,7 +777,7 @@
    </objectgroup>
   </group>
   <group id="18" name="2">
-   <objectgroup id="41" name="enemies" visible="0">
+   <objectgroup id="41" name="enemies">
     <object id="52" type="enemy" gid="1" x="176" y="576" width="16" height="16">
      <properties>
       <property name="type" type="int" value="2"/>

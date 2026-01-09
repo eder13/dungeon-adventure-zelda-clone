@@ -6,6 +6,8 @@ export const ASSET_KEYS = {
     PLAYER: 'PLAYER',
     PLAYER_DEATH: 'PLAYER_DEATH',
     POT: 'POT',
+    SMALL_KEY: 'SMALL_KEY',
+    BOSS_KEY: 'BOSS_KEY',
     POT_BREAK: 'POT_BREAK',
     SPIDER: 'SPIDER',
     SPIDER_RED: 'SPIDER_RED',

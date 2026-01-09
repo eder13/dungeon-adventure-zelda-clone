@@ -120,6 +120,21 @@
         ]
     },
     {
+        "path": "assets/images/items",
+        "files": [
+            {
+                "type": "image",
+                "key": "SMALL_KEY",
+                "url": "small_key.png"
+            },
+            {
+                "type": "image",
+                "key": "BOSS_KEY",
+                "url": "boss_key.png"
+            }
+        ]
+    },
+    {
         "path": "assets/images/enemies",
         "files": [
             {

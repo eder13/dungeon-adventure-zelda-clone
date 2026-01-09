@@ -12,6 +12,7 @@ export class Button extends Phaser.Physics.Arcade.Image implements CustomGameObj
         const frame =
             config.texture === SWITCH_TEXTURE.FLOOR ? BUTTON_FRAME_KEYS.FLOOR_SWITCH : BUTTON_FRAME_KEYS.PLATE_SWITCH;
         super(scene, config.x, config.y, ASSET_KEYS.DUNGEON_OBJECTS, frame);
+        console.log('#####** [btn] config', config);
         this.switchTargetIds = config.targetIds;
         this.switchAction = config.action;
         this.scene.add.existing(this);

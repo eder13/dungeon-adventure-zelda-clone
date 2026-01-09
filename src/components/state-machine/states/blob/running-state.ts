@@ -1,6 +1,6 @@
 import { BLOB_ANIMATION_KEYS, PlayerAnimation } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
-import { DIRECTION_BLOB, DIRECTION_SPIDER } from '../../../../common/globals';
+import { DIRECTION_BLOB, DIRECTION_SPIDER, WORLD_FREEZE_STATE } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
 import AbstractMovableState from '../../base/abstract-movable-state';
 import { BlobStates, SpiderStates } from '../states';
@@ -19,6 +19,12 @@ class RunningStateBlob extends AbstractMovableState {
             !this.gameObject.controls.isRightDown
         ) {
             this.stateMachine.setState(BlobStates.IDLE);
+        }
+
+        if (WORLD_FREEZE_STATE.isFrozen) {
+            this.gameObject.updateVelocity(false, 0);
+            this.gameObject.updateVelocity(true, 0);
+            return;
         }
 
         if (this.gameObject.controlsComponent.controls.isDownDown) {

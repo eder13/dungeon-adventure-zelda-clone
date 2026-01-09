@@ -3,6 +3,7 @@ import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import AbstractMovableState from '../../base/abstract-movable-state';
 import { BlobStates } from '../states';
 import Blob from '../../../../game-objects/enemies/blob';
+import { EVENT_BUS, Events } from '../../../../common/events';
 
 class DeathStateBlob extends AbstractMovableState {
     onDieCallback: () => void;
@@ -45,6 +46,8 @@ class DeathStateBlob extends AbstractMovableState {
     onDefeat() {
         (this.gameObject as Blob).disableObject();
         this.onDieCallback();
+
+        EVENT_BUS.emit(Events.ENEMY_DEFEATED, this.gameObject);
     }
 
     onUpdate(args?: unknown[]) {}

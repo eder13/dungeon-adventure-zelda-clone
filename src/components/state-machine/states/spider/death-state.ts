@@ -1,4 +1,5 @@
 import { SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
+import { EVENT_BUS, Events } from '../../../../common/events';
 import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -45,6 +46,7 @@ class DeathStateSpider extends AbstractMovableState {
     onDefeat() {
         (this.gameObject as Spider).disableObject();
         this.onDieCallback();
+        EVENT_BUS.emit(Events.ENEMY_DEFEATED, this.gameObject);
     }
 
     onUpdate(args?: unknown[]) {}

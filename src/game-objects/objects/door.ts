@@ -111,37 +111,52 @@ class Door implements CustomGameObject {
         }
     }
 
-    public disableObject(disableDoorTrigger = true): void {
-        console.log('#####** Disabling door transition zone for door id:', this.doorTransitionZone.name);
-
+    public disableObject(disableDoorTrigger = true, disableDoorObject = false): void {
         if (disableDoorTrigger) {
             (this.doorTransitionZone as any).body.enabled = false;
             (this.doorTransitionZone as any).body.active = false;
             (this.doorTransitionZone as any).body.visible = false;
         }
 
-        if (this.isUnlocked) {
-            return;
+        console.log('####** [btn] this.doorObect', this.doorObject);
+        console.trace('[btn]');
+
+        if (this.doorObject && disableDoorObject) {
+            // zuverlässig Body  Sprite deaktivieren
+            // 1) disableBody sorgt dafür, dass Body aus physics world entfernt wird und Sprite hidden/ inactive wird
+            (this.doorObject as Phaser.Physics.Arcade.Image).disableBody(true, true);
+
+            // 2) zusätzlich sicherstellen, dass collision checks aus sind
+            const body = (this.doorObject as any).body as Phaser.Physics.Arcade.Body | undefined;
+            if (body) {
+                body.checkCollision.none = true;
+                body.enable = false;
+                body.stop();
+            }
+
+            // 3) falls du Groups nutzt: entferne es aus blockingGroup, sonst Collider gegen Gruppe feuert eventuell weiter
+            const bg = (this.scene as any).blockingGroup as Phaser.GameObjects.Group | undefined;
+            if (bg && bg.contains(this.doorObject)) {
+                bg.remove(this.doorObject, false, false);
+            }
         }
 
-        if (this.doorObject) {
-            (this.doorObject as any).body.enabled = false;
-            (this.doorObject as any).body.active = false;
-            (this.doorObject as any).body.visible = false;
-        }
+        console.log('####** [btn] this.doorObect disabled', this.doorObject);
     }
 
     public openDoor() {
+        console.log('[btn] #####** this.doorType', this.doorType);
+
         if (this.doorType === DOOR_TYPE.OPEN) {
             return;
         }
 
-        if (this.doorType === DOOR_TYPE.LOCK || this.doorType === DOOR_TYPE.BOSS) {
-            this.isUnlocked = true;
+        //if (this.doorType === DOOR_TYPE.LOCK || this.doorType === DOOR_TYPE.BOSS) {
+        this.isUnlocked = true;
 
-            // disable overlayed locked door object and enable transition zone for room transition
-            this.disableObject(false);
-        }
+        // disable overlayed locked door object and enable transition zone for room transition
+        this.disableObject(false, true);
+        //}
     }
 }
 

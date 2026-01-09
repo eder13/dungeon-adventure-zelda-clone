@@ -22,6 +22,8 @@ import {
     PLAYER_INVULNERABLE_DURATION,
     SAW_INVULNERABLE_DURATION,
     SPIDER_HEALTH,
+    WORLD_FREEZE_STATE,
+    WORLD_FREEZE_STATE_PLAYER,
 } from '../common/globals';
 import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
@@ -29,7 +31,7 @@ import { GameObject, LevelData } from '../common/types';
 import { EVENT_BUS, Events } from '../common/events';
 import Fire from '../game-objects/objects/fire';
 import { DIRECTION, TiledRoomObject } from '../common/tiled/types';
-import { DOOR_TYPE, TILED_LAYER_NAMES, TILED_TILESET_NAMES, TRAP_TYPE } from '../common/tiled/common';
+import { DOOR_TYPE, SWITCH_ACTION, TILED_LAYER_NAMES, TILED_TILESET_NAMES, TRAP_TYPE } from '../common/tiled/common';
 import {
     getAllLayerNamesWithPrefix,
     getTiledChestObjectsFromMap,
@@ -46,6 +48,7 @@ import { isEqual } from 'lodash';
 import Blob from '../game-objects/enemies/blob';
 import Spike from '../game-objects/enemies/spike';
 import { Button } from '../game-objects/objects/button';
+import InventoryManager from '../components/inventory/inventory';
 
 export class GameScene extends Phaser.Scene {
     player!: Player;
@@ -86,6 +89,8 @@ export class GameScene extends Phaser.Scene {
 
     private _freezeState = {
         enemies: new Map<Phaser.GameObjects.GameObject, { active: boolean; bodyEnabled: boolean }>(),
+        pausedTweensByEnemy: new Map<Phaser.GameObjects.GameObject, Phaser.Tweens.Tween[]>(),
+        pausedTweens: false,
     };
 
     constructor() {
@@ -255,8 +260,21 @@ export class GameScene extends Phaser.Scene {
         this.player = new Player({
             scene: this,
             position: {
-                x: 320,
-                y: 1017,
+                // Starting room (room 3)
+                //x: 320,
+                //y: 1017,
+
+                // Room 5
+                //x: 1088,
+                //y: 670,
+
+                // Room 6
+                //x: 944,
+                //y: 300,
+
+                // Room 7
+                x: 1330,
+                y: 780,
             },
             assetKey: ASSET_KEYS.PLAYER,
             frame: 0,
@@ -332,6 +350,8 @@ export class GameScene extends Phaser.Scene {
 
         console.log('#####** this.blockinggroup', this.blockingGroup);
         console.log('#####** this.enemyGroup', this.enemyGroup);
+
+        console.log('#####** [btn] this.buttongroupt', this.buttonGroup);
     }
 
     update(time: number, delta: number): void {
@@ -411,6 +431,8 @@ export class GameScene extends Phaser.Scene {
 
         tiledEnemyObjects.forEach((tiledEnemy) => {
             let enemy: Spider | Saw | Blob | Spike;
+
+            console.log('#####** tiledEnemyObject', tiledEnemy);
 
             if (tiledEnemy.type === 1) {
                 enemy = new Spider({
@@ -501,8 +523,13 @@ export class GameScene extends Phaser.Scene {
         });
 
         // collision betweem player and other gameobjects
-        this.physics.add.overlap(this.player, this.enemyGroup, () => {
+        this.physics.add.overlap(this.player, this.enemyGroup, (player, enemy) => {
             this.player.hit(1);
+
+            // just for testing, remove afterwards for spider
+            if (enemy instanceof Spider) {
+                enemy.hit(2);
+            }
         });
 
         this.physics.add.overlap(this.player, this.entryDoor.doorTransitionZone, () => {
@@ -513,6 +540,22 @@ export class GameScene extends Phaser.Scene {
         // collision between player and blocking group
         this.physics.add.collider(this.player, this.blockingGroup, (player, gameObject) => {
             this.player.collidingWithObject(gameObject as GameObject);
+        });
+
+        // collision between player and locked doors
+        this.physics.add.collider(this.player, this.lockedDoorsBlockingGroup, (player, gameObject) => {
+            const correspondingDoor =
+                this.objectsByRoomId[this.currentRoomId].doorMap[Number((gameObject as any).name)];
+
+            console.log('[Locked Door Collision]', correspondingDoor);
+
+            if (correspondingDoor.doorType === DOOR_TYPE.LOCK && InventoryManager.getInstance().useKey()) {
+                correspondingDoor.openDoor();
+            }
+
+            if (correspondingDoor.doorType === DOOR_TYPE.BOSS && InventoryManager.getInstance().hasBossKey()) {
+                correspondingDoor.openDoor();
+            }
         });
 
         // collision between enemies and objects
@@ -597,10 +640,40 @@ export class GameScene extends Phaser.Scene {
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             EVENT_BUS.off(Events.OPEN_CHEST, () => {}, this);
         });
+
+        EVENT_BUS.on(
+            Events.ENEMY_DEFEATED,
+            (enemy: Blob | Spider) => {
+                Logger.info(`[event]: ${Events.ENEMY_DEFEATED}, args=${JSON.stringify(enemy)}`);
+
+                const enemyGroup = this.objectsByRoomId[this.currentRoomId].enemyGroup;
+
+                const allEnemiesAreDefeatedForCurrentRoom = enemyGroup.every((enemy) => {
+                    return enemy.active === false;
+                });
+
+                console.log('[enemies defeated] ', allEnemiesAreDefeatedForCurrentRoom);
+
+                if (allEnemiesAreDefeatedForCurrentRoom) {
+                    this.handleAllEnemiesDefeatedForRoom();
+                }
+            },
+            this,
+        );
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            EVENT_BUS.off(Events.ENEMY_DEFEATED, () => {}, this);
+        });
+    }
+
+    public freezeWorldWithPlayer(ms: number) {
+        WORLD_FREEZE_STATE_PLAYER.isFrozen = true;
+        this.freezeWorldExceptPlayer(ms, true);
     }
 
     // Freeze world except player for ms milliseconds
-    freezeWorldExceptPlayer(ms: number) {
+    public freezeWorldExceptPlayer(ms: number, freezePlayer: boolean) {
+        WORLD_FREEZE_STATE.isFrozen = true;
+
         // store & disable enemies
         this._freezeState.enemies.clear();
         // enemyGroup kann undefined sein -> guard
@@ -620,14 +693,37 @@ export class GameScene extends Phaser.Scene {
                 if ((enemy as any).anims && (enemy as any).anims.isPlaying) {
                     (enemy as any).anims.pause();
                 }
+
+                // collect and pause all tweens that target this enemy
+                const tweensForEnemy = this.tweens.getTweensOf(enemy);
+                if (tweensForEnemy && tweensForEnemy.length > 0) {
+                    this._freezeState.pausedTweensByEnemy.set(enemy, tweensForEnemy.slice());
+                    tweensForEnemy.forEach((t) => t.pause());
+                }
             });
         }
 
-        // automatically unfreeze after ms
-        this.time.delayedCall(ms, () => this.unfreezeWorldExceptPlayer());
+        // optional: pause ALL tweens (less granular)
+        // this.tweens.pauseAll();
+        this._freezeState.pausedTweens = true;
+
+        this.time.delayedCall(ms, () => {
+            if (freezePlayer) {
+                this.unfreezeWorldWithPlayer();
+            } else {
+                this.unfreezeWorldExceptPlayer();
+            }
+        });
     }
 
-    unfreezeWorldExceptPlayer() {
+    public unfreezeWorldWithPlayer() {
+        WORLD_FREEZE_STATE_PLAYER.isFrozen = false;
+        this.unfreezeWorldExceptPlayer();
+    }
+
+    public unfreezeWorldExceptPlayer() {
+        WORLD_FREEZE_STATE.isFrozen = false;
+
         // restore enemies
         this._freezeState.enemies.forEach((state, enemy) => {
             (enemy as any).active = state.active;
@@ -637,8 +733,21 @@ export class GameScene extends Phaser.Scene {
             if ((enemy as any).anims) {
                 (enemy as any).anims.resume();
             }
+
+            // resume tweens that were paused for this enemy
+            const paused = this._freezeState.pausedTweensByEnemy.get(enemy);
+            if (paused) {
+                paused.forEach((t) => t.resume());
+            }
         });
         this._freezeState.enemies.clear();
+        this._freezeState.pausedTweensByEnemy.clear();
+
+        if (this._freezeState.pausedTweens) {
+            // if you used pauseAll uncomment resumeAll(), otherwise kept for flag symmetry
+            // this.tweens.resumeAll();
+            this._freezeState.pausedTweens = false;
+        }
     }
 
     async handleRoomTransition(doorCollidedGameObject: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
@@ -659,7 +768,7 @@ export class GameScene extends Phaser.Scene {
         this.doorOverlapCollider.active = false;
         this.controls.locked = true;
 
-        this.freezeWorldExceptPlayer(FREEZE_TIME_ENEMIES_ROOM_TRANSITION);
+        this.freezeWorldExceptPlayer(FREEZE_TIME_ENEMIES_ROOM_TRANSITION, false);
         this.time.delayedCall(DELAY_DOOR_TRANSITION_DISABLED_COLLISION_OVERLAP_AND_LOCK_INPUT, () => {
             this.controls.locked = false;
 
@@ -755,10 +864,53 @@ export class GameScene extends Phaser.Scene {
     }
 
     private handleButtonPressed(button: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-        const buttonObject = this.objectsByRoomId[this.currentRoomId].switches[Number(button.name)];
+        const buttonObject = this.objectsByRoomId[this.currentRoomId].switches.find(
+            (btn) => btn?.body?.gameObject === button.body.gameObject,
+        );
+        const buttonData = buttonObject?.buttonPressed?.();
 
-        console.log('#####** buttonObject', buttonObject);
+        console.log('[btn] buttonObject:', buttonObject);
+        console.log('[btn] Button Action:', buttonData?.action);
+        console.log('[btn] Target IDs:', buttonData?.targetIds);
 
-        buttonObject.buttonPressed();
+        if (buttonData?.action === SWITCH_ACTION.NOTHING) {
+            return;
+        } else if (buttonData?.action === SWITCH_ACTION.OPEN_DOOR) {
+            buttonData?.targetIds.forEach((targetId) => {
+                const targetDoor = this.objectsByRoomId[this.currentRoomId].doors.find((door) => door.id === targetId);
+
+                console.log(
+                    '#####** [btn] this.objectsByRoomId[this.currentRoomId].doors',
+                    this.objectsByRoomId[this.currentRoomId].doors,
+                );
+                console.log('[btn] #####** targetDoor', targetDoor);
+
+                targetDoor?.openDoor?.();
+            });
+        } else if (buttonData?.action === SWITCH_ACTION.REVEAL_CHEST) {
+            buttonData?.targetIds.forEach((targetId) => {
+                const chest = this.objectsByRoomId[this.currentRoomId].chestMap[targetId];
+
+                console.log(
+                    '#####** [btn] this.objectsByRoomId[this.currentRoomId].chestMap',
+                    this.objectsByRoomId[this.currentRoomId].chestMap,
+                );
+                console.log('[btn] #####** chest', chest);
+
+                chest?.revealChest?.();
+            });
+        }
+    }
+
+    handleAllEnemiesDefeatedForRoom() {
+        console.log('[enemies defeated] All enemies defeated in room:', this.currentRoomId);
+
+        // open Doors again
+        const doors = this.objectsByRoomId[this.currentRoomId].doors;
+        doors.forEach((door) => {
+            if (door.doorObject && door.doorType === DOOR_TYPE.TRAP) {
+                door.openDoor();
+            }
+        });
     }
 }
