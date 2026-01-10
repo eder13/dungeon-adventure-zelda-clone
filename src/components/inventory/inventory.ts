@@ -43,6 +43,11 @@ class InventoryManager {
         }
         return InventoryManager.instance;
     }
+
+    public reset() {
+        this.key = 0;
+        this._hasBossKey = false;
+    }
 }
 
 export default InventoryManager;

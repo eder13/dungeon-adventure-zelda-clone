@@ -1,0 +1,33 @@
+import { PlayerAnimation, SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
+import { ATTACK_DIRECTION, DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
+import AbstractMovableState from '../../base/abstract-movable-state';
+import { Direction, DIRECTION as DIRECTION_HIT } from '../../../../common/tiled/types';
+import Boss from '../../../../game-objects/enemies/boss';
+import { BossStates } from '../states';
+
+class IdleStateBoss extends AbstractMovableState {
+    constructor(gameObject: Boss) {
+        super(BossStates.IDLE, gameObject);
+    }
+
+    onEnter(args?: unknown[]) {
+        const body = this.gameObject.body as Phaser.Physics.Arcade.Body;
+        body.velocity.x = 0;
+        body.velocity.y = 0;
+
+        // after the push back, wait a certain amount if time before reseting velocity
+        this.gameObject.scene.time.delayedCall(DELAYED_PUSH_BACK_HURT_RESET, () => {
+            body.velocity.x = 0;
+            body.velocity.y = 0;
+        });
+    }
+
+    onExit() {
+        super.onExit();
+        // Handle exiting the idle state
+    }
+
+    onUpdate(args?: unknown[]) {}
+}
+
+export default IdleStateBoss;

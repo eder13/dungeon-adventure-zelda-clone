@@ -37,3 +37,12 @@ export enum FireStates {
 export enum SpikeStates {
     IDLE = 'IDLE',
 }
+
+export enum BossStates {
+    IDLE = 'IDLE',
+    PRE_ATTACK = 'PRE_ATTACK',
+    ATTACK = 'ATTACK',
+    RANDOM = 'RANDOM',
+    HURT = 'HURT',
+    DEATH = 'DEATH',
+}

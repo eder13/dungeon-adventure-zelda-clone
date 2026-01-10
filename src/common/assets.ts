@@ -9,6 +9,7 @@ export const ASSET_KEYS = {
     POT: 'POT',
     SMALL_KEY: 'SMALL_KEY',
     BOSS_KEY: 'BOSS_KEY',
+    BOSS: 'BOSS',
     POT_BREAK: 'POT_BREAK',
     SPIDER: 'SPIDER',
     SPIDER_RED: 'SPIDER_RED',
@@ -127,18 +128,8 @@ export const SPIDER_RED_ANIMATION_KEYS = {
     DEATH: ASSET_KEYS.ENEMY_DEATH,
 } as const;
 
-export const DROW_ANIMATION_KEYS = {
-    WALK_DOWN: 'drow_walk_down',
-    WALK_UP: 'drow_walk_up',
-    WALK_LEFT: 'drow_walk_left',
-    WALK_RIGHT: 'drow_walk_right',
-    IDLE_DOWN: 'drow_idle_down',
-    IDLE_UP: 'drow_idle_up',
-    IDLE_SIDE: 'drow_idle_right',
-    HIT: 'drow_hit',
-    ATTACK_DOWN: 'drow_atk_down',
-    ATTACK_UP: 'drow_atk_up',
-    ATTACK_SIDE: 'drow_atk_right',
+export const BOSS_ANIMATION_KEYS = {
+    DEATH: ASSET_KEYS.ENEMY_DEATH,
 } as const;
 
 export const WISP_ANIMATION_KEYS = {

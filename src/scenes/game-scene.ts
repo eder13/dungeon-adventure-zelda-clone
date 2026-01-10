@@ -9,6 +9,8 @@ import Spider from '../game-objects/enemies/spider';
 import Saw from '../game-objects/enemies/saw';
 import {
     BLOB_HEALTH,
+    BOSS_HEALTH,
+    BOSS_INVULNERABLE_DURATION,
     DEBUG_COLLISION_ENEMY_TILEMAP,
     DEBUG_COLLISION_PLAYER_TILEMAP,
     DELAY_BETWEEN_FOCUS_ROOM_CAMERA,
@@ -48,6 +50,7 @@ import Blob from '../game-objects/enemies/blob';
 import Spike from '../game-objects/enemies/spike';
 import { Button } from '../game-objects/objects/button';
 import InventoryManager from '../components/inventory/inventory';
+import Boss from '../game-objects/enemies/boss';
 
 export class GameScene extends Phaser.Scene {
     player!: Player;
@@ -68,7 +71,7 @@ export class GameScene extends Phaser.Scene {
             pots: Pot[];
             chests: Chest[];
             fire: Fire[];
-            enemyGroup: Array<Spider | Saw | Blob | Spike>;
+            enemyGroup: Array<Spider | Saw | Blob | Spike | Boss>;
             room: TiledRoomObject;
         };
     };
@@ -255,6 +258,10 @@ export class GameScene extends Phaser.Scene {
         this.player = new Player({
             scene: this,
             position: {
+                // Room 1
+                //x: 302,
+                //y: 296,
+
                 // Starting room (room 3)
                 x: 320,
                 y: 1017,
@@ -361,6 +368,16 @@ export class GameScene extends Phaser.Scene {
         });
     }
 
+    update(): void {
+        if (this.currentRoomId === 1) {
+            this.enemyGroup.children.each((enemy) => {
+                if (enemy instanceof Boss) {
+                    enemy.startFight();
+                }
+            });
+        }
+    }
+
     createRoomObjects(map: Phaser.Tilemaps.Tilemap, layerName: string) {
         const tiledObjectsRooms = getTiledRoomObjectsFromMap(map, layerName);
         console.log('[Rooms]', tiledObjectsRooms);
@@ -429,7 +446,7 @@ export class GameScene extends Phaser.Scene {
         console.log('[Enemies] tiledEnemyObjects', tiledEnemyObjects);
 
         tiledEnemyObjects.forEach((tiledEnemy) => {
-            let enemy: Spider | Saw | Blob | Spike;
+            let enemy: Spider | Saw | Blob | Spike | Boss;
 
             console.log('#####** tiledEnemyObject', tiledEnemy);
 
@@ -456,8 +473,16 @@ export class GameScene extends Phaser.Scene {
                     invulnerableDuration: SAW_INVULNERABLE_DURATION,
                 });
             } else if (tiledEnemy.type === 3) {
-                // TODO: Boss
-                return;
+                enemy = new Boss({
+                    scene: this,
+                    position: { x: tiledEnemy.x, y: tiledEnemy.y },
+                    assetKey: ASSET_KEYS.BOSS,
+                    frame: 0,
+                    movement: new InputComponent(),
+                    isInvulnerable: false,
+                    invulnerableDuration: BOSS_INVULNERABLE_DURATION,
+                    maxLife: BOSS_HEALTH,
+                });
             } else if (tiledEnemy.type === 4) {
                 enemy = new Spike({
                     scene: this,
@@ -670,6 +695,18 @@ export class GameScene extends Phaser.Scene {
         );
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             EVENT_BUS.off(Events.PLAYER_DEFEATED, () => {}, this);
+        });
+
+        EVENT_BUS.on(
+            Events.BOSS_DEFEATED,
+            (boss: Boss) => {
+                Logger.info(`[event]: ${Events.BOSS_DEFEATED}, args=${JSON.stringify(boss)}`);
+                this.handleBossDefeated(boss);
+            },
+            this,
+        );
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            EVENT_BUS.off(Events.BOSS_DEFEATED, () => {}, this);
         });
     }
 
@@ -932,5 +969,10 @@ export class GameScene extends Phaser.Scene {
                 door.openDoor();
             }
         });
+    }
+
+    private handleBossDefeated(boss: Boss) {
+        console.log('[boss defeated] Boss defeated:', boss);
+        // Handle boss defeat logic
     }
 }

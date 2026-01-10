@@ -114,8 +114,16 @@ class AttackState extends AbstractMovableState {
                 this.weaponCollider = this.gameObject.scene.physics.add.overlap(this.weapon, enemies, (w, e) => {
                     console.log('[hitDirection] #####** ATTACK_DIRECTION inside--!', ATTACK_DIRECTION);
 
-                    // z. B. hit auf Enemy
-                    (e as any).hit?.(1, ATTACK_DIRECTION);
+                    console.log('[boss] e', e);
+
+                    console.log(
+                        '[boss] (e as any).invulnerableComponent?.isInvulnerable',
+                        (e as any).invulnerableComponent?.isInvulnerable,
+                    );
+
+                    if (!(e as any).invulnerableComponent?.isInvulnerable) {
+                        (e as any).hit?.(1, ATTACK_DIRECTION);
+                    }
                 });
             }
         }

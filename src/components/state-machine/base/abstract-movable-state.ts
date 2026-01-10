@@ -1,3 +1,4 @@
+import Boss from '../../../game-objects/enemies/boss';
 import Saw from '../../../game-objects/enemies/saw';
 import Spider from '../../../game-objects/enemies/spider';
 import Player from '../../../game-objects/player/player';
@@ -6,9 +7,9 @@ import StateMachine, { State } from '../state-machine';
 class AbstractMovableState implements State {
     stateMachine!: StateMachine;
     name: string;
-    gameObject: Player | Spider | Saw;
+    gameObject: Player | Spider | Saw | Boss;
 
-    constructor(name: string, gameObject: Player | Spider | Saw) {
+    constructor(name: string, gameObject: Player | Spider | Saw | Boss) {
         this.name = name;
         this.gameObject = gameObject;
     }

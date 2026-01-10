@@ -104,7 +104,7 @@ export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObje
         if (this._contents === CHEST_REWARD.NOTHING) {
             this._rewardObject = undefined;
 
-            EVENT_BUS.emit(Events.SHOW_DIALOG, 'The chest was empty?');
+            EVENT_BUS.emit(Events.SHOW_DIALOG, '...The chest was empty!');
         } else {
             this._rewardObject = this.scene.physics.add
                 .image(

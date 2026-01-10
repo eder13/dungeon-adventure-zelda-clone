@@ -5,6 +5,7 @@ import KeyboardInput from '../components/input-component/keyboard';
 import DataManager from '../components/data-manager/data-manager';
 import { LevelData } from '../common/types';
 import { LEVEL_NAME } from '../common/globals';
+import InventoryManager from '../components/inventory/inventory';
 
 export class GameOverScene extends Phaser.Scene {
     cursor!: Phaser.GameObjects.Image;
@@ -57,6 +58,8 @@ export class GameOverScene extends Phaser.Scene {
         if (this.keyboardInput.isEnterKeyDown) {
             if (this.menuOptionIndex === 0) {
                 DataManager.getInstance().reset();
+                InventoryManager.getInstance().reset();
+
                 const levelData: LevelData = {
                     level: LEVEL_NAME.DUNGEON_1,
                     doorId: 1,

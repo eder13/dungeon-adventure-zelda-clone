@@ -78,9 +78,16 @@ export const SPEED_BLOB = 100;
 
 export const BLOB_HEALTH = 3;
 
+export const BOSS_HEALTH = 6;
+export const BOSS_HURT_PUSHBACK_SPEED = 300;
+export const BOSS_RANDOM_DIRECTION_DELAY = 200;
+export const BOSS_RANDOM_STATE_FINISHED_DELAY = 500;
+
 export const PLAYER_INVULNERABLE_DURATION = 500;
 
 export const SAW_INVULNERABLE_DURATION = Infinity;
+
+export const BOSS_INVULNERABLE_DURATION = 500;
 
 export const PUSH_BACK_SPEED = 100;
 export const SPIDER_HURT_PUSHBACK_SPEED = 100;
