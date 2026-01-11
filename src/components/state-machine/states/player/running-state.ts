@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
 import { PlayerStates } from '../states';
@@ -13,7 +13,7 @@ import Logger from '../../../../common/logger';
 
 class RunningState extends AbstractMovableState {
     private lastStepTime = 0;
-    private stepInterval = 300; // ms, anpassen (z.B. 250..400)
+    private stepInterval = 300;
 
     constructor(gameObject: Player) {
         super(PlayerStates.RUNNING, gameObject);
@@ -22,17 +22,13 @@ class RunningState extends AbstractMovableState {
     onUpdate(args?: unknown[]) {
         const now = this.gameObject.scene.time.now;
 
-        // Wenn gesperrt: keinerlei Input verarbeiten -> Velocity stoppen
         if (this.gameObject.controls.locked) {
             this.gameObject.updateVelocity(true, 0);
             this.gameObject.updateVelocity(false, 0);
-            // optional: this.gameObject.anims.stop(); // falls Animation ebenfalls stoppen soll
             return;
         }
 
         if (this.gameObject.controls.isAttackKeyDown) {
-            console.log('[attack]: is attack down');
-
             this.stateMachine.setState(PlayerStates.ATTACK, DIRECTION);
             BLOCK_ATTACK_MOVEMENT.blockAttackMovement = true;
 
@@ -76,7 +72,7 @@ class RunningState extends AbstractMovableState {
 
                 this.gameObject.play(
                     {
-                        key: PlayerAnimation.WALKING_DOWN,
+                        key: PLAYER_ANIMATION_KEYS.WALKING_DOWN,
                         repeat: -1,
                     },
                     true,
@@ -99,7 +95,7 @@ class RunningState extends AbstractMovableState {
 
                 this.gameObject.play(
                     {
-                        key: PlayerAnimation.WALKING_UP,
+                        key: PLAYER_ANIMATION_KEYS.WALKING_UP,
                         repeat: -1,
                     },
                     true,
@@ -140,7 +136,7 @@ class RunningState extends AbstractMovableState {
 
                     this.gameObject.play(
                         {
-                            key: PlayerAnimation.WALKING_LEFT,
+                            key: PLAYER_ANIMATION_KEYS.WALKING_LEFT,
                             repeat: -1,
                         },
                         true,
@@ -178,7 +174,7 @@ class RunningState extends AbstractMovableState {
 
                     this.gameObject.play(
                         {
-                            key: PlayerAnimation.WALKING_RIGHT,
+                            key: PLAYER_ANIMATION_KEYS.WALKING_RIGHT,
                             repeat: -1,
                         },
                         true,
@@ -225,7 +221,6 @@ class RunningState extends AbstractMovableState {
         if (!interactivecomponent._canInteractCheck()) {
             return false;
         }
-        console.log('#####** trying to interact', interactivecomponent);
         interactivecomponent.interact();
 
         if (interactivecomponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {

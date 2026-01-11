@@ -30,7 +30,6 @@ class InputComponent {
         return this.down;
     }
 
-    // for not continious pressing i.e. menu control
     get isDownJustDown() {
         return this.down;
     }
@@ -47,7 +46,6 @@ class InputComponent {
         this.up = val;
     }
 
-    // for not continious pressing i.e. menu control
     get isUpJustDown() {
         return this.up;
     }

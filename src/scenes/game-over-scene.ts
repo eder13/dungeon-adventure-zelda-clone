@@ -2,10 +2,6 @@ import * as Phaser from 'phaser';
 import { SCENE_KEYS } from './scene-keys';
 import { ASSET_KEYS } from '../common/assets';
 import KeyboardInput from '../components/input-component/keyboard';
-import DataManager from '../components/data-manager/data-manager';
-import { LevelData } from '../common/types';
-import { LEVEL_NAME } from '../common/globals';
-import InventoryManager from '../components/inventory/inventory';
 
 export class GameOverScene extends Phaser.Scene {
     cursor!: Phaser.GameObjects.Image;
@@ -44,8 +40,6 @@ export class GameOverScene extends Phaser.Scene {
         if (this.input.keyboard) {
             this.keyboardInput = new KeyboardInput(this.input.keyboard);
         }
-
-        console.log('#####** time until death:', DataManager.getInstance().time);
     }
 
     update(): void {

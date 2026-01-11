@@ -1,7 +1,6 @@
 import { GameObject } from '../../common/types';
 import BaseGameObject from './base-game-object-component';
 
-// e.g the Pot for carrying
 class CollidingObjectComponent extends BaseGameObject {
     _objects: GameObject[];
 

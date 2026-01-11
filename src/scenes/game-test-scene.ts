@@ -38,25 +38,8 @@ export class GameTestScene extends Phaser.Scene {
         });
     }
 
-    private initZoom() {
-        const dpr = window.devicePixelRatio || 1;
-        console.log('#####** dpr', dpr);
-
-        // base zoom
-        let zoom = 1;
-
-        // boost zoom on retina
-        /* if (dpr >= 2) {
-            zoom = 2;
-        } */
-
-        this.cameras.main.setZoom(zoom);
-    }
-
     public create(): void {
-        this.fpsText = document.getElementById('fps');
-
-        this.initZoom();
+        this.fpsText = document.getElementById('footer');
 
         if (!this.input.keyboard) {
             Logger.error('Keyboard is not enabled!');

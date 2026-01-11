@@ -101,25 +101,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     public init(data): void {
-        this.initZoom();
-        console.log('#####** init data', data);
-
         this.levelData = data;
         this.currentRoomId = data.roomId;
-    }
-
-    private initZoom() {
-        const dpr = window.devicePixelRatio || 1;
-
-        // base zoom
-        let zoom = 1;
-
-        // boost zoom on retina
-        /* if (dpr >= 2) {
-            zoom = 2;
-        } */
-
-        this.cameras.main.setZoom(zoom);
     }
 
     public create(): void {
@@ -133,8 +116,6 @@ export class GameScene extends Phaser.Scene {
         const map = this.make.tilemap({ key: `${this.levelData.level}_LEVEL` });
 
         const collisionTiles = map.addTilesetImage(TILED_TILESET_NAMES.COLLISION, ASSET_KEYS.COLLISION);
-
-        console.log('#####** collisionTiles', collisionTiles);
 
         const collisionLayer = map.createLayer(
             TILED_LAYER_NAMES.COLLISION,
@@ -175,41 +156,10 @@ export class GameScene extends Phaser.Scene {
         this.blockingGroup = this.add.group([]);
         this.lockedDoorsBlockingGroup = this.add.group([]);
         this.buttonGroup = this.add.group([]);
-        this.enemyGroup = this.add.group(
-            [],
-            /*[
-                 new Spider({
-                    scene: this,
-                    position: {
-                        x: this.scale.width / 2 - 12,
-                        y: this.scale.height / 2 + 50,
-                    },
-                    assetKey: ASSET_KEYS.SPIDER,
-                    frame: 0,
-                    movement: new InputComponent(),
-                    isInvulnerable: false,
-                    // no duration because spiders are weak enemies
-                    invulnerableDuration: 0,
-                    maxLife: SPIDER_HEALTH,
-                }),
-                new Saw({
-                    scene: this,
-                    position: {
-                        x: this.scale.width / 2,
-                        y: this.scale.height / 2 + 100,
-                    },
-                    assetKey: ASSET_KEYS.SAW,
-                    frame: 0,
-                    movement: new InputComponent(),
-                    isInvulnerable: true,
-                    invulnerableDuration: SAW_INVULNERABLE_DURATION,
-                }),
-            ], */
-            {
-                // this way can remove the update function below
-                runChildUpdate: true,
-            },
-        );
+        this.enemyGroup = this.add.group([], {
+            // this way can remove the update function below
+            runChildUpdate: true,
+        });
 
         this.createRoomObjects(map, TILED_LAYER_NAMES.ROOMS);
 
@@ -226,8 +176,6 @@ export class GameScene extends Phaser.Scene {
         const enemyLayerNames = roomObjects.filter((room) => room.name.endsWith(`/${TILED_LAYER_NAMES.ENEMIES}`));
         const chestLayerNames = roomObjects.filter((room) => room.name.endsWith(`/${TILED_LAYER_NAMES.CHESTS}`));
         const doorLayerNames = roomObjects.filter((room) => room.name.endsWith(`/${TILED_LAYER_NAMES.DOORS}`));
-
-        console.log('#####** doorLayerNames', doorLayerNames);
 
         switchLayerNames.forEach((layer) => {
             this.createSwitches(map, layer.name, layer.roomId);
@@ -250,7 +198,6 @@ export class GameScene extends Phaser.Scene {
         });
 
         doorLayerNames.forEach((layer) => {
-            console.log('#####** layerDoor', layer);
             this.createDoors(map, layer.name, layer.roomId);
         });
 
@@ -308,53 +255,12 @@ export class GameScene extends Phaser.Scene {
             -1,
         );
 
-        /*         this.blockingGroup = this.add.group([
-            new Pot({
-                scene: this,
-                position: {
-                    x: this.scale.width / 2,
-                    y: this.scale.height / 2 + 150,
-                },
-            }),
-            new Chest({
-                scene: this,
-                position: {
-                    x: this.scale.width / 2,
-                    y: this.scale.height / 2 - 100,
-                },
-                requireBossKey: false,
-                chestState: CHEST_STATE.REVEALED,
-            }),
-
-            new Chest({
-                scene: this,
-                position: {
-                    x: this.scale.width / 2 - 50,
-                    y: this.scale.height / 2 - 100,
-                },
-                requireBossKey: true,
-                chestState: CHEST_STATE.REVEALED,
-            }),
-
-            new Fire({
-                scene: this,
-                position: {
-                    x: this.scale.width / 2 + 50,
-                    y: this.scale.height / 2 - 100,
-                },
-            }),
-        ]); */
-
         this.registerColliders();
         this.registerCustomEvents();
 
         const room = this.objectsByRoomId[this.currentRoomId].room;
         this.cameras.main.setBounds(room.x, room.y - room.height, room.width, room.height);
         this.cameras.main.startFollow(this.player);
-
-        console.log('#####** this.blockinggroup', this.blockingGroup);
-        console.log('#####** this.enemyGroup', this.enemyGroup);
-        console.log('#####** [btn] this.buttongroupt', this.buttonGroup);
 
         // run scenes in paralell (UI on top of scene)
         this.scene.launch(SCENE_KEYS.UI_SCENE);
@@ -395,8 +301,6 @@ export class GameScene extends Phaser.Scene {
 
     createRoomObjects(map: Phaser.Tilemaps.Tilemap, layerName: string) {
         const tiledObjectsRooms = getTiledRoomObjectsFromMap(map, layerName);
-        console.log('[Rooms]', tiledObjectsRooms);
-
         const that = this;
         tiledObjectsRooms.forEach(function (tiledObject) {
             that.objectsByRoomId[tiledObject.id] = {
@@ -415,7 +319,6 @@ export class GameScene extends Phaser.Scene {
 
     createPots(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledPotObjects = getTiledPotObjectsFromMap(map, layerName);
-        console.log('[Pots] tiledPotObjects', tiledPotObjects);
 
         tiledPotObjects.forEach((tiledPot) => {
             const pot = new Pot({ scene: this, position: { x: tiledPot.x, y: tiledPot.y } });
@@ -426,11 +329,8 @@ export class GameScene extends Phaser.Scene {
 
     createChests(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledChestObjects = getTiledChestObjectsFromMap(map, layerName);
-        console.log('[Chests] tiledChestObjects', tiledChestObjects);
 
         tiledChestObjects.forEach((tiledChest) => {
-            console.log('#####** tiledChest.revealChestTrigger', tiledChest.revealChestTrigger);
-
             const chest = new Chest({
                 scene: this,
                 position: { x: tiledChest.x, y: tiledChest.y },
@@ -447,7 +347,6 @@ export class GameScene extends Phaser.Scene {
 
     createFire(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledFireObjects = getTiledFireObjectsFromMap(map, layerName);
-        console.log('[Fire] tiledFireObjects', tiledFireObjects);
 
         tiledFireObjects.forEach((tiledFire) => {
             const fire = new Fire({ scene: this, position: { x: tiledFire.x, y: tiledFire.y } });
@@ -458,12 +357,9 @@ export class GameScene extends Phaser.Scene {
 
     createEnemies(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledEnemyObjects = getTiledEnemyObjectsFromMap(map, layerName);
-        console.log('[Enemies] tiledEnemyObjects', tiledEnemyObjects);
 
         tiledEnemyObjects.forEach((tiledEnemy) => {
             let enemy: Spider | Saw | Blob | Spike | Boss;
-
-            console.log('#####** tiledEnemyObject', tiledEnemy);
 
             if (tiledEnemy.type === 1) {
                 enemy = new Spider({
@@ -525,7 +421,6 @@ export class GameScene extends Phaser.Scene {
 
     createSwitches(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledSwitchObjects = getTiledSwitchObjectsFromMap(map, layerName);
-        console.log('[Switches] tiledSwitchObjects', tiledSwitchObjects);
 
         tiledSwitchObjects.forEach((tiledSwitch) => {
             const button = new Button(this, tiledSwitch);
@@ -536,7 +431,6 @@ export class GameScene extends Phaser.Scene {
 
     createDoors(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number) {
         const tiledDoorObjects = getTiledDoorObjectsFromMap(map, layerName);
-        console.log('[Doors] tiledDoorObjects', tiledDoorObjects);
 
         tiledDoorObjects.forEach((tiledDoor) => {
             const door = new Door(this, tiledDoor, roomId);
@@ -582,8 +476,6 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.lockedDoorsBlockingGroup, (player, gameObject) => {
             const correspondingDoor =
                 this.objectsByRoomId[this.currentRoomId].doorMap[Number((gameObject as any).name)];
-
-            console.log('[Locked Door Collision]', correspondingDoor);
 
             if (correspondingDoor.doorType === DOOR_TYPE.LOCK && InventoryManager.getInstance().useKey()) {
                 correspondingDoor.openDoor();
@@ -632,8 +524,6 @@ export class GameScene extends Phaser.Scene {
                     return true;
                 }
 
-                console.log('#####** [pot]', this.player.objectHeldComponent._object);
-
                 if (
                     this.player.objectHeldComponent._object &&
                     this.player.objectHeldComponent._object instanceof Pot &&
@@ -660,12 +550,6 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.blockingGroup, this.enemyCollisionTilemap);
         // enable collision for all tiles on the layer (sauberste Option)
         this.enemyCollisionTilemap.setCollisionByExclusion([-1], true);
-
-        // debug: prüfe, ob Enemies Bodies haben
-        // @ts-ignore
-        this.enemyGroup.children.each((e: any) => {
-            console.log('ENEMY BODY CHECK', e.constructor?.name, 'body=', !!e.body, e.body);
-        });
 
         // add collider with callback (tile callback signature: (gameObject, tile) => void)
         this.physics.add.collider(
@@ -727,7 +611,7 @@ export class GameScene extends Phaser.Scene {
                 if (this.cache.audio.exists(key)) {
                     this.sound.play(key, { volume: 0.2 });
                 } else {
-                    console.warn(`Audio key "${key}" not found when Saw hit wall`);
+                    Logger.warn(`Audio key "${key}" not found when Saw hit wall`);
                 }
             },
             undefined,
@@ -765,8 +649,6 @@ export class GameScene extends Phaser.Scene {
                 const allEnemiesAreDefeatedForCurrentRoom = enemyGroup.every((enemy) => {
                     return enemy.active === false;
                 });
-
-                console.log('[enemies defeated] ', allEnemiesAreDefeatedForCurrentRoom);
 
                 if (allEnemiesAreDefeatedForCurrentRoom) {
                     this.handleAllEnemiesDefeatedForRoom();
@@ -814,7 +696,6 @@ export class GameScene extends Phaser.Scene {
 
         // store & disable enemies
         this._freezeState.enemies.clear();
-        // enemyGroup kann undefined sein -> guard
         if (this.enemyGroup) {
             // @ts-ignore (Phaser Group children type)
             this.enemyGroup.children.each((enemy: Phaser.GameObjects.GameObject) => {
@@ -841,8 +722,6 @@ export class GameScene extends Phaser.Scene {
             });
         }
 
-        // optional: pause ALL tweens (less granular)
-        // this.tweens.pauseAll();
         this._freezeState.pausedTweens = true;
 
         this.time.delayedCall(ms, () => {
@@ -891,13 +770,8 @@ export class GameScene extends Phaser.Scene {
     async handleRoomTransition(doorCollidedGameObject: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
         this.player.controls.locked = true;
 
-        console.log('#####** door trigger', doorCollidedGameObject);
-        console.log(`Transitioning to door: ${doorCollidedGameObject.name}`);
-
         const door = this.objectsByRoomId[this.currentRoomId].doorMap[Number(doorCollidedGameObject.name)];
-        console.log('#####** door', door);
         const targetDoor = this.objectsByRoomId[door.targetRoomId].doorMap[door.targetDoorId];
-        console.log('#####** targetDoor', targetDoor);
 
         // Disable collision for a short amount of time to "travel through" the door
         door.disableObject();
@@ -916,11 +790,7 @@ export class GameScene extends Phaser.Scene {
             }
         });
 
-        console.log('#####** door.direction', door.direction);
-        console.log('#####** targetDoor.direction', targetDoor.direction);
-
         const targetDirection = getDirectionOfObjectFromAnotherObject(door.position, targetDoor.position);
-        console.log('#####** targetDirection', targetDirection);
 
         const doorDistance = {
             x: Math.abs((targetDoor.position.x - door.position.x) / 2),
@@ -978,9 +848,6 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.stopFollow();
         const bounds = this.cameras.main.getBounds();
 
-        console.log('#####** roomSize.width', roomSize.width);
-        console.log('#####** roomSize.height', roomSize.height);
-
         this.tweens.add({
             targets: bounds,
             x: roomSize.x,
@@ -1007,42 +874,22 @@ export class GameScene extends Phaser.Scene {
         );
         const buttonData = buttonObject?.buttonPressed?.();
 
-        console.log('[btn] buttonObject:', buttonObject);
-        console.log('[btn] Button Action:', buttonData?.action);
-        console.log('[btn] Target IDs:', buttonData?.targetIds);
-
         if (buttonData?.action === SWITCH_ACTION.NOTHING) {
             return;
         } else if (buttonData?.action === SWITCH_ACTION.OPEN_DOOR) {
             buttonData?.targetIds.forEach((targetId) => {
                 const targetDoor = this.objectsByRoomId[this.currentRoomId].doors.find((door) => door.id === targetId);
-
-                console.log(
-                    '#####** [btn] this.objectsByRoomId[this.currentRoomId].doors',
-                    this.objectsByRoomId[this.currentRoomId].doors,
-                );
-                console.log('[btn] #####** targetDoor', targetDoor);
-
                 targetDoor?.openDoor?.();
             });
         } else if (buttonData?.action === SWITCH_ACTION.REVEAL_CHEST) {
             buttonData?.targetIds.forEach((targetId) => {
                 const chest = this.objectsByRoomId[this.currentRoomId].chestMap[targetId];
-
-                console.log(
-                    '#####** [btn] this.objectsByRoomId[this.currentRoomId].chestMap',
-                    this.objectsByRoomId[this.currentRoomId].chestMap,
-                );
-                console.log('[btn] #####** chest', chest);
-
                 chest?.revealChest?.();
             });
         }
     }
 
     private handlePlayerDefeated(player: Player) {
-        console.log('[player defeated] Player defeated:', player);
-
         // Handle player defeat logic
         this.cameras.main.fadeOut(1000, 0, 0, 0);
 
@@ -1054,8 +901,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     private handleAllEnemiesDefeatedForRoom() {
-        console.log('[enemies defeated] All enemies defeated in room:', this.currentRoomId);
-
         // open Doors again
         const doors = this.objectsByRoomId[this.currentRoomId].doors;
         doors.forEach((door) => {
@@ -1070,7 +915,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     private handleBossDefeated(boss: Boss) {
-        console.log('[boss defeated] Boss defeated:', boss);
         // Handle boss defeat logic
         this.hasBossDefeated = true;
 

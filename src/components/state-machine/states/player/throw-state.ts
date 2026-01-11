@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -10,15 +10,6 @@ class ThrowState extends AbstractMovableState {
     }
 
     onEnter(args?: unknown[]) {
-        console.log('[ThrowState] enter', {
-            time: Date.now(),
-            player: this.gameObject,
-            instanceofPlayer: this.gameObject instanceof Player,
-        });
-        console.log('[ThrowState] objectHeldComponent', (this.gameObject as any).objectHeldComponent);
-        console.log('[ThrowState] held._object', (this.gameObject as any).objectHeldComponent?._object);
-        console.trace('[ThrowState] trace');
-
         this.gameObject.updateVelocity(true, 0);
         this.gameObject.updateVelocity(false, 0);
 
@@ -26,7 +17,7 @@ class ThrowState extends AbstractMovableState {
         if (DIRECTION.isMovingDown) {
             this.gameObject.playReverse(
                 {
-                    key: PlayerAnimation.PICKUP_DOWN,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_DOWN,
                     repeat: -1,
                 },
                 true,
@@ -34,7 +25,7 @@ class ThrowState extends AbstractMovableState {
         } else if (DIRECTION.isMovingUp) {
             this.gameObject.playReverse(
                 {
-                    key: PlayerAnimation.PICKUP_UP,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_UP,
                     repeat: -1,
                 },
                 true,
@@ -42,7 +33,7 @@ class ThrowState extends AbstractMovableState {
         } else if (DIRECTION.isMovingLeft) {
             this.gameObject.playReverse(
                 {
-                    key: PlayerAnimation.PICKUP_LEFT,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_LEFT,
                     repeat: -1,
                 },
                 true,
@@ -50,7 +41,7 @@ class ThrowState extends AbstractMovableState {
         } else if (DIRECTION.isMovingRight) {
             this.gameObject.playReverse(
                 {
-                    key: PlayerAnimation.PICKUP_RIGHT,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_RIGHT,
                     repeat: -1,
                 },
                 true,
@@ -63,13 +54,9 @@ class ThrowState extends AbstractMovableState {
             return;
         }
 
-        console.log('#####** heldGameObjectComponent before throw', heldGameObjectComponent);
-
         const throwableObjectComponent = heldGameObjectComponent._object.throwableObjectComponent;
 
         if (throwableObjectComponent !== undefined) {
-            console.log('####** inside throw!!');
-
             throwableObjectComponent?.throw?.();
             return;
         }

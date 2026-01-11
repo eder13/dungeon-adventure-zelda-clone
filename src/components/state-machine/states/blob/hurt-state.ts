@@ -24,8 +24,6 @@ class HurtStateBlob extends AbstractMovableState {
     onEnter(args?: unknown[]) {
         const hitDirection = args?.[0] as typeof ATTACK_DIRECTION | undefined;
 
-        console.log('[hitDirection BLOB]', hitDirection);
-
         const body = this.gameObject.body as Phaser.Physics.Arcade.Body;
         body.velocity.x = 0;
         body.velocity.y = 0;
@@ -84,7 +82,6 @@ class HurtStateBlob extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {}

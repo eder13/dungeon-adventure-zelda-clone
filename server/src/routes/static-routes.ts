@@ -12,4 +12,9 @@ export const staticRoutes: ServerRoute[] = [
         },
         handler: 'StaticController.getStaticFile',
     },
+    {
+        method: 'GET',
+        path: '/credits',
+        handler: 'StaticController.creditsPage',
+    },
 ];

@@ -1,7 +1,5 @@
-import { PlayerAnimation, SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
-import { ATTACK_DIRECTION, DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
+import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import AbstractMovableState from '../../base/abstract-movable-state';
-import { Direction, DIRECTION as DIRECTION_HIT } from '../../../../common/tiled/types';
 import Boss from '../../../../game-objects/enemies/boss';
 import { BossStates } from '../states';
 
@@ -24,7 +22,6 @@ class IdleStateBoss extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {}

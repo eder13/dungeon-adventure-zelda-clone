@@ -14,11 +14,11 @@ export function getDirectionOfObjectFromAnotherObject(object: Position, targetOb
     const dy = targetObject.y - object.y;
     const absDx = Math.abs(dx);
     const absDy = Math.abs(dy);
-    const EPS = 1e-3; // Toleranz für nahezu gleiche Positionen
+    const EPS = 1e-3; // tolerance for near-equal positions
 
-    // Wähle die Achse mit der größeren Distanz. Bei nahezu gleicher Distanz default zu horizontal.
+    // Choose the axis with the greater distance. If nearly equal, default to horizontal.
     if (absDx < EPS && absDy < EPS) {
-        return DIRECTION.LEFT; // beliebiger Default, passt an falls nötig
+        return DIRECTION.LEFT; // arbitrary default, adjust if necessary
     }
 
     if (absDx >= absDy) {

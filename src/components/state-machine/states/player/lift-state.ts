@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -13,13 +13,6 @@ class LiftState extends AbstractMovableState {
     onEnter(args?: unknown[]) {
         const gameObjectPickedUp = args?.[0] as GameObject | undefined;
 
-        console.log('[LiftState] enter', {
-            time: Date.now(),
-            player: this.gameObject,
-            instanceofPlayer: this.gameObject instanceof Player,
-        });
-        console.log('[LiftState] setting held object ->', gameObjectPickedUp);
-
         this.gameObject.updateVelocity(true, 0);
         this.gameObject.updateVelocity(false, 0);
 
@@ -31,29 +24,17 @@ class LiftState extends AbstractMovableState {
         heldGameObjectComponent._object = gameObjectPickedUp;
         (this.gameObject as any).objectHeldComponent._object = heldGameObjectComponent._object;
 
-        console.log('[LiftState] after set held._object =', (this.gameObject as any).objectHeldComponent._object);
-
         if (gameObjectPickedUp?.body) {
             const body = gameObjectPickedUp.body as Phaser.Physics.Arcade.Body;
             body.enable = false;
         }
         gameObjectPickedUp?.setDepth(3).setOrigin(0.5, 0.5);
 
-        // secret buttons under pot -> revealed
-        /* if (
-            (gameObjectPickedUp?.x === 896 && gameObjectPickedUp?.y === 64) ||
-            (gameObjectPickedUp?.x === 1328 && gameObjectPickedUp?.y === 928) ||
-            (gameObjectPickedUp?.x === 1328 && gameObjectPickedUp?.y === 816) ||
-            (gameObjectPickedUp?.x === 688 && gameObjectPickedUp?.y === 416)
-        ) {
-            this.gameObject.scene.sound.play('SFX_SECRET_UNVEILED', { volume: 0.4 });
-        } */
-
         this.gameObject.scene.sound.play('SFX_ITEM_PICKUP', { volume: 0.4 });
         if (DIRECTION.isMovingDown) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_DOWN,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_DOWN,
                     repeat: -1,
                 },
                 true,
@@ -61,7 +42,7 @@ class LiftState extends AbstractMovableState {
         } else if (DIRECTION.isMovingUp) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_UP,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_UP,
                     repeat: -1,
                 },
                 true,
@@ -69,7 +50,7 @@ class LiftState extends AbstractMovableState {
         } else if (DIRECTION.isMovingLeft) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_LEFT,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_LEFT,
                     repeat: -1,
                 },
                 true,
@@ -77,7 +58,7 @@ class LiftState extends AbstractMovableState {
         } else if (DIRECTION.isMovingRight) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_RIGHT,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_RIGHT,
                     repeat: -1,
                 },
                 true,
@@ -87,7 +68,6 @@ class LiftState extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {

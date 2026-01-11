@@ -1,4 +1,3 @@
-import { PlayerAnimation } from '../../common/assets';
 import { CustomGameObject, GameObject, Position } from '../../common/types';
 import * as Phaser from 'phaser';
 import InputComponent from '../../components/input-component/input';
@@ -7,7 +6,7 @@ import IdleState from '../../components/state-machine/states/player/idle-state';
 import StateMachine from '../../components/state-machine/state-machine';
 import { PlayerStates } from '../../components/state-machine/states/states';
 import RunningState from '../../components/state-machine/states/player/running-state';
-import { DIRECTION, PUSH_BACK_SPEED, SPEED_PLAYER } from '../../common/globals';
+import { PUSH_BACK_SPEED, SPEED_PLAYER } from '../../common/globals';
 import InvulnerableComponent from '../../components/game-object/invulnerable-component';
 import HurtState from '../../components/state-machine/states/player/hurt-state';
 import LifeComponent from '../../components/game-object/life-component';
@@ -18,7 +17,6 @@ import IdleHoldingState from '../../components/state-machine/states/player/idle-
 import OpenChestState from '../../components/state-machine/states/player/open-chest-state';
 import LiftState from '../../components/state-machine/states/player/lift-state';
 import ObjectHeldComponent from '../../components/game-object/object-held-component';
-import ThrowableObjectComponent from '../../components/game-object/throwable-object-component';
 import ThrowState from '../../components/state-machine/states/player/throw-state';
 import AttackState from '../../components/state-machine/states/player/attack-state';
 import DataManager from '../../components/data-manager/data-manager';
@@ -65,7 +63,7 @@ class Player extends Phaser.Physics.Arcade.Sprite implements CustomGameObject {
         const hurtState = new HurtState(this, PUSH_BACK_SPEED, undefined, PlayerStates.IDLE);
         this.stateMachine.addState(hurtState);
         const deathState = new DeathStatePlayer(this, () => {
-            console.log('Player has died');
+            this.isDefeated = true;
         });
         this.stateMachine.addState(deathState);
         const moveHoldingState = new MoveHoldingState(this);
@@ -163,7 +161,6 @@ class Player extends Phaser.Physics.Arcade.Sprite implements CustomGameObject {
     }
 
     public collidingWithObject(object: GameObject) {
-        console.log('####** adObject');
         this.collidingObjectComponent.addObject(object);
     }
 }

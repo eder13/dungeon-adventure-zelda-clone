@@ -5,7 +5,7 @@ import AbstractStaticState from '../../base/abstract-static-state';
 
 class SpikeIdleState extends AbstractStaticState {
     private lastStepTime = 0;
-    private stepInterval = 700; // ms, anpassen (z.B. 250..400)
+    private stepInterval = 700;
 
     constructor(gameObject: Fire) {
         super(SpikeStates.IDLE, gameObject);
@@ -23,7 +23,6 @@ class SpikeIdleState extends AbstractStaticState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {

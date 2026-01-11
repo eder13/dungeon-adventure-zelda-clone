@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
 import { DIRECTION_SPIDER, WORLD_FREEZE_STATE } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';

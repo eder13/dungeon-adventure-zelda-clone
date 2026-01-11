@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -13,7 +13,6 @@ class OpenChestState extends AbstractMovableState {
 
     onEnter(args: any): void {
         const chest = args?.[0] as Chest;
-        console.log('#####** chest', chest);
 
         if (this.gameObject.body) {
             this.gameObject.body.velocity.x = 0;
@@ -29,7 +28,6 @@ class OpenChestState extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 }
 

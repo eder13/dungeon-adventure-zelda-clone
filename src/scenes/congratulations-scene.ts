@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import { SCENE_KEYS } from './scene-keys';
 import DataManager from '../components/data-manager/data-manager';
-import { LeaderboardEntry } from './leaderboard-scene';
 
 export default class CongratulationsScene extends Phaser.Scene {
     private nameInput?: Phaser.GameObjects.DOMElement;
@@ -14,14 +13,12 @@ export default class CongratulationsScene extends Phaser.Scene {
     }
 
     create() {
-        // optional: zeige bereits bekannten final time falls vorhanden
         this.finalTime = (DataManager.getInstance().time as string) ?? this.finalTime;
 
         const cam = this.cameras.main;
         const w = cam.width;
         const h = cam.height;
 
-        // Congratulations-Text
         this.add
             .text(w / 2, h / 2 - 16, 'Congratulations! You won!', {
                 fontFamily: 'Arial',
@@ -47,7 +44,6 @@ export default class CongratulationsScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setScrollFactor(0);
 
-        // HTML input per Phaser DOM
         this.nameInput = this.add.dom(
             w / 2,
             h / 2 + 70,
@@ -108,7 +104,6 @@ export default class CongratulationsScene extends Phaser.Scene {
             inputEl.removeEventListener('keyup', stopPropagation);
         });
 
-        // Submit-Button (Phaser Text)
         this.submitBtn = this.add
             .text(w / 2, h / 2 + 100, 'Submit', { fontSize: '14px', color: '#ffffff', backgroundColor: '#333' })
             .setOrigin(0.5)
@@ -130,7 +125,6 @@ export default class CongratulationsScene extends Phaser.Scene {
             const name = el.value.trim();
             if (!name) return;
             const finalTime = this.finalTime;
-            console.log('submit name', name, 'time', finalTime);
 
             fetch('/api/leaderboard', {
                 method: 'POST',
@@ -156,16 +150,13 @@ export default class CongratulationsScene extends Phaser.Scene {
                 });
         };
 
-        // click auf Button
         this.submitBtn.on('pointerdown', doSubmit, this);
 
-        // Enter-Taste im HTML-Input
         const onKey = (e: KeyboardEvent) => {
             if (e.key === 'Enter') doSubmit();
         };
         inputEl.addEventListener('keydown', onKey);
 
-        // entferne Listener beim Shutdown
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             inputEl.removeEventListener('keydown', onKey);
         });

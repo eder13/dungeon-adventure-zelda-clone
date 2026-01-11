@@ -1,4 +1,4 @@
-import { BLOB_ANIMATION_KEYS, PlayerAnimation } from '../../../../common/assets';
+import { BLOB_ANIMATION_KEYS, PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import Player from '../../../../game-objects/player/player';
 import { DIRECTION_BLOB, DIRECTION_SPIDER, WORLD_FREEZE_STATE } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';

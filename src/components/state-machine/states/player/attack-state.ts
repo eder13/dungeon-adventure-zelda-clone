@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { ATTACK_DIRECTION, BLOCK_ATTACK_MOVEMENT, DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -16,23 +16,21 @@ class AttackState extends AbstractMovableState {
             this.weapon = player.weapon;
             return;
         }
-        // Erzeuge das Weapon-Sprite einmal (ersetze 'WEAPON_KEY' durch deinen Asset-Key)
+
         this.weapon = this.gameObject.scene.add
             .sprite(0, 0, 'WEAPON_KEY', 0)
             .setOrigin(0.5, 0.5)
             .setDepth(this.gameObject.depth + 1)
             .setVisible(false);
 
-        // optional Physics-Body für Overlap/Hits
         this.gameObject.scene.physics.add.existing(this.weapon);
         const wBody = this.weapon.body as Phaser.Physics.Arcade.Body;
         if (wBody) {
-            wBody.setEnable(false); // nur während Attack aktivieren
+            wBody.setEnable(false);
             wBody.setImmovable(true);
             wBody.setAllowGravity(false);
         }
 
-        // store on player to reuse
         player.weapon = this.weapon;
     }
 
@@ -53,12 +51,18 @@ class AttackState extends AbstractMovableState {
         this.gameObject.updateVelocity(true, 0);
         this.gameObject.updateVelocity(false, 0);
 
-        // OFFSETS: dx/dy sind Pixel-Offsets vom Player-Zentrum zur Weapon-Position; feinjustieren!
+        // offsets for player animation and overlap of player - exchange sprites and make sure the overlap
         const OFFSETS: Record<string, { dx: number; dy: number; anim: string; flip?: boolean; direction: string }> = {
-            down: { dx: -3, dy: 5, anim: PlayerAnimation.ATTACK_DOWN, direction: DIRECTION_HIT.DOWN },
-            up: { dx: 1, dy: -1, anim: PlayerAnimation.ATTACK_UP, direction: DIRECTION_HIT.UP },
-            left: { dx: -5, dy: 4, anim: PlayerAnimation.ATTACK_LEFT, flip: false, direction: DIRECTION_HIT.LEFT },
-            right: { dx: 5, dy: 2, anim: PlayerAnimation.ATTACK_RIGHT, direction: DIRECTION_HIT.RIGHT },
+            down: { dx: -3, dy: 5, anim: PLAYER_ANIMATION_KEYS.ATTACK_DOWN, direction: DIRECTION_HIT.DOWN },
+            up: { dx: 1, dy: -1, anim: PLAYER_ANIMATION_KEYS.ATTACK_UP, direction: DIRECTION_HIT.UP },
+            left: {
+                dx: -5,
+                dy: 4,
+                anim: PLAYER_ANIMATION_KEYS.ATTACK_LEFT,
+                flip: false,
+                direction: DIRECTION_HIT.LEFT,
+            },
+            right: { dx: 5, dy: 2, anim: PLAYER_ANIMATION_KEYS.ATTACK_RIGHT, direction: DIRECTION_HIT.RIGHT },
         };
 
         let key: { dx: number; dy: number; anim: string; flip?: boolean; direction: string } | undefined;
@@ -92,7 +96,7 @@ class AttackState extends AbstractMovableState {
             }
         }
 
-        // positioniere Weapon und zeige sie
+        // position weapon sprites relative to gameobject
         this.weapon.setPosition(this.gameObject.x + (key?.dx ?? 0), this.gameObject.y + (key?.dy ?? 0));
         this.weapon.setFlipX(!!key?.flip);
         this.weapon.setVisible(true);
@@ -100,27 +104,18 @@ class AttackState extends AbstractMovableState {
         // hide player visuals but keep physics body active
         const player: any = this.gameObject;
         const hadAnims = !!player.anims;
-        if (hadAnims) player.anims.pause(); // Animation anhalten
-        player.setVisible(false); // Sprite ausblenden (Body bleibt aktiv)
 
-        // aktiviere Body für Overlap während Attack (falls vorhanden)
+        // hide normal player sprite and pause animations
+        if (hadAnims) player.anims.pause();
+        player.setVisible(false);
         const wBody = this.weapon.body as Phaser.Physics.Arcade.Body | undefined;
         if (wBody) wBody.setEnable(true);
 
-        // optional: einmaligen overlap gegen Enemies einrichten (erstellt beim ersten Angriff)
+        // attack, collide with enemies
         if (!this.weaponCollider) {
             const enemies = (this.gameObject.scene as any).enemyGroup as Phaser.GameObjects.Group | undefined;
             if (enemies) {
-                this.weaponCollider = this.gameObject.scene.physics.add.overlap(this.weapon, enemies, (w, e) => {
-                    console.log('[hitDirection] #####** ATTACK_DIRECTION inside--!', ATTACK_DIRECTION);
-
-                    console.log('[boss] e', e);
-
-                    console.log(
-                        '[boss] (e as any).invulnerableComponent?.isInvulnerable',
-                        (e as any).invulnerableComponent?.isInvulnerable,
-                    );
-
+                this.weaponCollider = this.gameObject.scene.physics.add.overlap(this.weapon, enemies, (_, e) => {
                     if (!(e as any).invulnerableComponent?.isInvulnerable) {
                         (e as any).hit?.(1, ATTACK_DIRECTION);
                     }
@@ -128,21 +123,15 @@ class AttackState extends AbstractMovableState {
             }
         }
 
-        // spiele Weapon-Animation (non-looping)
         this.weapon.play({ key: key?.anim ?? '', repeat: 0 }, true);
         this.gameObject.scene?.sound.play('SFX_SWORD_ATTACK', { seek: 1.75 });
 
-        console.log('[hitDirection] #####** key.direction outside', key?.direction);
-        console.log('[hitDirection] #####** ATTACK_DIRECTION outside', ATTACK_DIRECTION);
-
         this.weapon.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (animation: Phaser.Animations.Animation) => {
-            console.log('***** Attack animation complete - unlocking movement', animation.key);
-
             if (
-                animation.key === PlayerAnimation.ATTACK_DOWN ||
-                animation.key === PlayerAnimation.ATTACK_UP ||
-                animation.key === PlayerAnimation.ATTACK_LEFT ||
-                animation.key === PlayerAnimation.ATTACK_RIGHT
+                animation.key === PLAYER_ANIMATION_KEYS.ATTACK_DOWN ||
+                animation.key === PLAYER_ANIMATION_KEYS.ATTACK_UP ||
+                animation.key === PLAYER_ANIMATION_KEYS.ATTACK_LEFT ||
+                animation.key === PLAYER_ANIMATION_KEYS.ATTACK_RIGHT
             ) {
                 BLOCK_ATTACK_MOVEMENT.blockAttackMovement = false;
             }
@@ -158,7 +147,7 @@ class AttackState extends AbstractMovableState {
             }
             // restore player visuals & animations
             player.setVisible(true);
-            if (hadAnims) player.anims.resume(); // oder play Idle-Anim explizit
+            if (hadAnims) player.anims.resume();
 
             this.gameObject.invulnerableComponent.invulnerable = false;
 

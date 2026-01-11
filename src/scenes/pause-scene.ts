@@ -24,10 +24,8 @@ export default class PauseScene extends Phaser.Scene {
         const w = cam.width;
         const h = cam.height;
 
-        // halbtransparenter Hintergrund (viewport-gebunden)
         this.add.rectangle(0, 0, w, h, 0x000000, 0.5).setOrigin(0, 0).setScrollFactor(0);
 
-        // Pause-Text
         this.add
             .text(w / 2, h / 2 - 16, 'PAUSED', {
                 fontFamily: 'Arial',
@@ -62,6 +60,6 @@ export default class PauseScene extends Phaser.Scene {
         if (this.scene.isPaused(SCENE_KEYS.UI_SCENE)) {
             this.scene.resume(SCENE_KEYS.UI_SCENE);
         }
-        this.scene.stop(); // stoppe Pause-Scene
+        this.scene.stop();
     }
 }

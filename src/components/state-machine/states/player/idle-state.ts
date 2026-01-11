@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -16,13 +16,10 @@ class IdleState extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {
         if (this.gameObject.controls.isAttackKeyDown && !this.gameObject.controls.locked) {
-            console.log('[attack]: is attack down');
-
             this.stateMachine.setState(PlayerStates.ATTACK, DIRECTION);
             return;
         }
@@ -30,7 +27,7 @@ class IdleState extends AbstractMovableState {
         if (!DIRECTION.isMovingDown && !DIRECTION.isMovingUp && !DIRECTION.isMovingLeft && !DIRECTION.isMovingRight) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.IDLE_DOWN,
+                    key: PLAYER_ANIMATION_KEYS.IDLE_DOWN,
                     repeat: -1,
                 },
                 true,
@@ -45,7 +42,7 @@ class IdleState extends AbstractMovableState {
 
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.IDLE_DOWN,
+                    key: PLAYER_ANIMATION_KEYS.IDLE_DOWN,
                     repeat: -1,
                 },
                 true,
@@ -60,7 +57,7 @@ class IdleState extends AbstractMovableState {
 
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.IDLE_UP,
+                    key: PLAYER_ANIMATION_KEYS.IDLE_UP,
                     repeat: -1,
                 },
                 true,
@@ -75,7 +72,7 @@ class IdleState extends AbstractMovableState {
 
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.IDLE_LEFT,
+                    key: PLAYER_ANIMATION_KEYS.IDLE_LEFT,
                     repeat: -1,
                 },
                 true,
@@ -90,7 +87,7 @@ class IdleState extends AbstractMovableState {
 
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.IDLE_RIGHT,
+                    key: PLAYER_ANIMATION_KEYS.IDLE_RIGHT,
                     repeat: -1,
                 },
                 true,

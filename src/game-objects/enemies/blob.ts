@@ -11,7 +11,6 @@ import {
     DELAY_BLOB_CHANGE_DIRECTION_MIN,
     DELAY_BLOB_CHANGE_DIRECTION_WAIT,
     SPEED_BLOB,
-    WORLD_FREEZE_STATE,
 } from '../../common/globals';
 import InvulnerableComponent from '../../components/game-object/invulnerable-component';
 import LifeComponent from '../../components/game-object/life-component';
@@ -19,7 +18,6 @@ import IdleBlobState from '../../components/state-machine/states/blob/idle-state
 import RunningStateBlob from '../../components/state-machine/states/blob/running-state';
 import HurtStateBlob from '../../components/state-machine/states/blob/hurt-state';
 import DeathStateBlob from '../../components/state-machine/states/blob/death-state';
-import { Direction } from '../../common/tiled/types';
 
 export interface BlobConfig {
     scene: Phaser.Scene;

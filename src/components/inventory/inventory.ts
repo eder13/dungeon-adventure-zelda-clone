@@ -6,7 +6,6 @@ class InventoryManager {
     _hasBossKey: boolean;
 
     private constructor() {
-        // Initialize inventory
         this.key = 0;
         this._hasBossKey = false;
     }

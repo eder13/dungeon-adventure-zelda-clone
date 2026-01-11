@@ -3,14 +3,13 @@ import * as Phaser from 'phaser';
 import InputComponent from '../../components/input-component/input';
 import ControlsComponent from '../../components/game-object/controls-component';
 import StateMachine from '../../components/state-machine/state-machine';
-import { BossStates, SawStates } from '../../components/state-machine/states/states';
+import { BossStates } from '../../components/state-machine/states/states';
 import {
     BOSS_HURT_PUSHBACK_SPEED,
     TWEEN_DURATION,
     TWEEN_SCALE_X_PULSE,
     TWEEN_SCALE_Y_PULSE,
 } from '../../common/globals';
-import BounceMoveState from '../../components/state-machine/states/saw/bounce-move-state';
 import InvulnerableComponent from '../../components/game-object/invulnerable-component';
 import LifeComponent from '../../components/game-object/life-component';
 import HurtStateBoss from '../../components/state-machine/states/boss/hurt-state';
@@ -112,13 +111,12 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
         this.lifeComponent.takeDamage(damage);
 
         if (this.lifeComponent.currentLives <= 0) {
-            console.log('[boss] play death state');
             this.isDefeated = true;
             this.stateMachine.setState(BossStates.DEATH, hitDirection);
             return;
         }
 
-        console.log('[boss] play hurt state');
+        this.stateMachine.setState(BossStates.HURT, hitDirection);
         this.stateMachine.setState(BossStates.HURT, hitDirection);
     }
 
@@ -131,7 +129,6 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
     startFight() {
         if (!this.isDefeated && !this.fightHasStarted) {
             this.fightHasStarted = true;
-            console.log('[boss] starting fight');
             this.stateMachine.setState(BossStates.RANDOM);
         }
     }

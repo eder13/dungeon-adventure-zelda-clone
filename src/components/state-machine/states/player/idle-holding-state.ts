@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -15,7 +15,7 @@ class IdleHoldingState extends AbstractMovableState {
         if (DIRECTION.isMovingDown) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_DOWN_IDLE,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_DOWN_IDLE,
                     repeat: -1,
                 },
                 true,
@@ -23,7 +23,7 @@ class IdleHoldingState extends AbstractMovableState {
         } else if (DIRECTION.isMovingUp) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_UP_IDLE,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_UP_IDLE,
                     repeat: -1,
                 },
                 true,
@@ -31,7 +31,7 @@ class IdleHoldingState extends AbstractMovableState {
         } else if (DIRECTION.isMovingLeft) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_LEFT_IDLE,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_LEFT_IDLE,
                     repeat: -1,
                 },
                 true,
@@ -39,7 +39,7 @@ class IdleHoldingState extends AbstractMovableState {
         } else if (DIRECTION.isMovingRight) {
             this.gameObject.play(
                 {
-                    key: PlayerAnimation.PICKUP_RIGHT_IDLE,
+                    key: PLAYER_ANIMATION_KEYS.PICKUP_RIGHT_IDLE,
                     repeat: -1,
                 },
                 true,
@@ -49,19 +49,9 @@ class IdleHoldingState extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {
-        /*  if (
-            !this.gameObject.controls.isDownDown &&
-            !this.gameObject.controls.isUpDown &&
-            !this.gameObject.controls.isLeftDown &&
-            !this.gameObject.controls.isRightDown
-        ) {
-            return;
-        } */
-
         if (this.gameObject.controls.isActionKeyDown) {
             this.gameObject.stateMachine.setState(PlayerStates.THROW);
             return;

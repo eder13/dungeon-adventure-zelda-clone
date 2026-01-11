@@ -9,10 +9,8 @@ import {
     DELAY_SPIDER_CHANGE_DIRECTION_MAX,
     DELAY_SPIDER_CHANGE_DIRECTION_MIN,
     DELAY_SPIDER_CHANGE_DIRECTION_WAIT,
-    SPEED_PLAYER,
     SPEED_SPIDER,
     SPIDER_HURT_PUSHBACK_SPEED,
-    WORLD_FREEZE_STATE,
 } from '../../common/globals';
 import IdleStateSpider from '../../components/state-machine/states/spider/idle-state';
 import RunningStateSpider from '../../components/state-machine/states/spider/running-state';
@@ -20,7 +18,6 @@ import InvulnerableComponent from '../../components/game-object/invulnerable-com
 import LifeComponent from '../../components/game-object/life-component';
 import HurtStateSpider from '../../components/state-machine/states/spider/hurt-state';
 import DeathStateSpider from '../../components/state-machine/states/spider/death-state';
-import { Direction } from '../../common/tiled/types';
 
 export interface SpiderConfig {
     scene: Phaser.Scene;

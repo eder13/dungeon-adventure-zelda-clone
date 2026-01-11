@@ -37,14 +37,12 @@ class DeathStateBlob extends AbstractMovableState {
         });
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            console.log('Die Animation is done');
             this.onDefeat();
         });
     }
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onDefeat() {

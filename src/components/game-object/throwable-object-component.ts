@@ -26,8 +26,6 @@ class ThrowableObjectComponent extends BaseGameObject {
         body.velocity.x = 0;
         body.velocity.y = 0;
 
-        console.log('####** throw direction', DIRECTION);
-
         // depending on direction that we phase -> throw
         if (DIRECTION.isMovingDown) {
             (body as Phaser.Physics.Arcade.Body).enable = false;

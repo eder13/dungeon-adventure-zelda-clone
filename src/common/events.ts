@@ -1,5 +1,4 @@
 import * as Phaser from 'phaser';
-import { PLAYER_HEALTH } from './globals';
 
 export const EVENT_BUS = new Phaser.Events.EventEmitter();
 

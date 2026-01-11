@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { SCENE_KEYS } from './scene-keys';
-import { ASSET_KEYS, ASSET_PACK_KEYS, PlayerAnimation } from '../common/assets';
+import { ASSET_KEYS, ASSET_PACK_KEYS, PLAYER_ANIMATION_KEYS } from '../common/assets';
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -82,7 +82,7 @@ export class PreloadScene extends Phaser.Scene {
             frameRate: 10,
         });
         this.anims.create({
-            key: PlayerAnimation.PLAYER_DEATH,
+            key: PLAYER_ANIMATION_KEYS.PLAYER_DEATH,
             frames: this.anims.generateFrameNames('PLAYER_DEATH', {
                 start: 31,
                 end: 40,

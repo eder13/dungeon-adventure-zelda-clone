@@ -29,9 +29,7 @@ export class Pot extends Phaser.Physics.Arcade.Sprite implements CustomGameObjec
             this,
             INTERACTIVE_OBJECT_TYPE.PICKUP,
             () => true,
-            () => {
-                console.log('#####** Interacted with Pot');
-            },
+            () => {},
         );
 
         this.throwableObjectComponent = new ThrowableObjectComponent(this, () => {
@@ -61,8 +59,6 @@ export class Pot extends Phaser.Physics.Arcade.Sprite implements CustomGameObjec
             if (animation.key !== ASSET_KEYS.POT_BREAK) {
                 return;
             }
-
-            console.log('***** Pot break animation complete - hiding');
             this.setTexture(ASSET_KEYS.POT, 0);
             this.disableObject();
         });

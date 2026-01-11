@@ -1,7 +1,7 @@
-import { PlayerAnimation } from './assets';
+import { PLAYER_ANIMATION_KEYS } from './assets';
 import { CHEST_STATE, INTERACTIVE_OBJECT_TYPE, LEVEL_NAME } from './globals';
 
-export type CharacterAnimation = keyof typeof PlayerAnimation;
+export type CharacterAnimation = keyof typeof PLAYER_ANIMATION_KEYS;
 
 export type Position = {
     x: number;

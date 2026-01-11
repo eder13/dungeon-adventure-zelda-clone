@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { EVENT_BUS, Events } from '../../../../common/events';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
@@ -36,27 +36,23 @@ class DeathStatePlayer extends AbstractMovableState {
             mgr.sounds.forEach((s: Phaser.Sound.BaseSound) => {
                 if (!s.key) return;
                 if (s.key.includes('POT') || s.key.includes('SFX_POT')) {
-                    console.log('##### [pot] foreach', s);
-
                     if (s.isPlaying) s.stop();
                 }
             });
         });
 
         this.gameObject.play({
-            key: PlayerAnimation.PLAYER_DEATH,
+            key: PLAYER_ANIMATION_KEYS.PLAYER_DEATH,
             repeat: 0,
         });
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            console.log('Die Animation is done');
             this.onDefeat();
         });
     }
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onDefeat() {

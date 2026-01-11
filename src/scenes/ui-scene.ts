@@ -1,8 +1,6 @@
 import * as Phaser from 'phaser';
 import { SCENE_KEYS } from './scene-keys';
-import { ASSET_KEYS, ASSET_PACK_KEYS, PlayerAnimation } from '../common/assets';
-import { LEVEL_NAME, PLAYER_HEALTH } from '../common/globals';
-import { LevelData } from '../common/types';
+import { ASSET_KEYS } from '../common/assets';
 import DataManager from '../components/data-manager/data-manager';
 import { EVENT_BUS, Events } from '../common/events';
 import Logger from '../common/logger';
@@ -16,7 +14,7 @@ enum HeartsFrame {
 export class UIScene extends Phaser.Scene {
     private timerEvent?: Phaser.Time.TimerEvent;
     private startTime = 0;
-    private elapsedBase = 0; // bereits akkumulierte Zeit vor Pause
+    private elapsedBase = 0;
     private running = true;
     private elapsedTimeText = '0.000';
     hudContainer!: Phaser.GameObjects.Container;
@@ -86,7 +84,6 @@ export class UIScene extends Phaser.Scene {
         this.elapsedBase = 0;
         this.running = true;
 
-        // TimerEvent aktualisiert das Textfeld, aber nur wenn running==true
         this.timerEvent = this.time.addEvent({
             delay: 50,
             loop: true,
@@ -98,7 +95,6 @@ export class UIScene extends Phaser.Scene {
             },
         });
 
-        // Reagiere auf Scene lifecycle damit Pause/Resume funktioniert
         this.events.on(Phaser.Scenes.Events.PAUSE, () => this.pauseTimer());
         this.events.on(Phaser.Scenes.Events.RESUME, () => this.resumeTimer());
         this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => this.shutdownTimer());
@@ -185,7 +181,6 @@ export class UIScene extends Phaser.Scene {
 
     private pauseTimer() {
         if (!this.running) return;
-        // akkumulierte Zeit updaten und stoppen
         this.elapsedBase += this.time.now - this.startTime;
         this.running = false;
     }
@@ -204,7 +199,6 @@ export class UIScene extends Phaser.Scene {
         this.running = false;
     }
 
-    // public API: reset timer (z.B. beim Respawn / GameOver)
     public resetTimer() {
         this.elapsedBase = 0;
         this.startTime = this.time.now;

@@ -112,7 +112,6 @@ export const THROW_SPEED = 300;
 export const THROW_ITEM_DELAY_BEFORE_CALLBACK = 200;
 
 export const LEVEL_NAME = {
-    WORLD: 'WORLD',
     DUNGEON_1: 'DUNGEON_1',
 } as const;
 

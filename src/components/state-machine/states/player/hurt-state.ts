@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -36,8 +36,6 @@ class HurtState extends AbstractMovableState {
             mgr.sounds.forEach((s: Phaser.Sound.BaseSound) => {
                 if (!s.key) return;
                 if (s.key.includes('POT') || s.key.includes('SFX_POT')) {
-                    console.log('##### [pot] foreach', s);
-
                     if (s.isPlaying) s.stop();
                 }
             });
@@ -45,12 +43,8 @@ class HurtState extends AbstractMovableState {
 
         const heldGameObjectComponent = (this.gameObject as any).objectHeldComponent;
         if (heldGameObjectComponent && heldGameObjectComponent._object) {
-            console.log('[pot] heldGameObjectComponent', heldGameObjectComponent);
-
             const throwableObjectComponent = heldGameObjectComponent._object.throwableObjectComponent;
             if (throwableObjectComponent !== undefined) {
-                console.log('[pot] throwableObjectComponent', throwableObjectComponent);
-
                 throwableObjectComponent?.drop?.();
             }
         }
@@ -63,7 +57,7 @@ class HurtState extends AbstractMovableState {
             body.velocity.x = this.hurtPushbackSpeed;
         } else if (attackDirection.isMovingRight) {
             body.velocity.x = -this.hurtPushbackSpeed;
-        } // TODO: Down_right etc. Push back
+        }
 
         // after the push back, wait a certain amount if time before reseting velocity
         this.gameObject.scene.time.delayedCall(DELAYED_PUSH_BACK_HURT_RESET, () => {
@@ -80,10 +74,9 @@ class HurtState extends AbstractMovableState {
             this.gameObject.clearTint();
         });
 
-        this.gameObject.play(PlayerAnimation.PLAYER_HURT, true);
+        this.gameObject.play(PLAYER_ANIMATION_KEYS.PLAYER_HURT, true);
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            console.log('Hurt animation finished');
             this.transition();
         });
     }
@@ -99,7 +92,6 @@ class HurtState extends AbstractMovableState {
 
     onExit() {
         super.onExit();
-        // Handle exiting the idle state
     }
 
     onUpdate(args?: unknown[]) {}

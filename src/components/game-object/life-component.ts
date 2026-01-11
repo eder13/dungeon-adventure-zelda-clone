@@ -1,5 +1,4 @@
 import { GameObject } from '../../common/types';
-import Player from '../../game-objects/player/player';
 import BaseGameObject from './base-game-object-component';
 
 class LifeComponent extends BaseGameObject {

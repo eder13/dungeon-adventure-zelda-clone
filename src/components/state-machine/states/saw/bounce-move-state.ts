@@ -1,4 +1,4 @@
-import { PlayerAnimation, SAW_ANIMATION_KEYS } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS, SAW_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION, SPEED_SAW_BOUNCE } from '../../../../common/globals';
 import Saw from '../../../../game-objects/enemies/saw';
 import Player from '../../../../game-objects/player/player';

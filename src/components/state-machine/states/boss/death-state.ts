@@ -39,7 +39,6 @@ class DeathStateBoss extends AbstractMovableState {
         });
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            console.log('Die Animation is done');
             this.onDefeat();
         });
     }
@@ -52,8 +51,6 @@ class DeathStateBoss extends AbstractMovableState {
     onDefeat() {
         (this.gameObject as Blob).disableObject();
         this.onDieCallback();
-
-        console.log('[boss] Emitting BOSS_DEFEATED event');
         EVENT_BUS.emit(Events.BOSS_DEFEATED, this.gameObject);
     }
 

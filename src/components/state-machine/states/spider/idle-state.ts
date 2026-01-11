@@ -1,4 +1,4 @@
-import { SPIDER_ANIMATION_KEYS, SPIDER_RED_ANIMATION_KEYS } from '../../../../common/assets';
+import { SPIDER_RED_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION_SPIDER } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
 import AbstractMovableState from '../../base/abstract-movable-state';

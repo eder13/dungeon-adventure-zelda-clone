@@ -1,9 +1,7 @@
-import { PlayerAnimation, SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
 import { ATTACK_DIRECTION, DELAYED_PUSH_BACK_HURT_RESET, DIRECTION } from '../../../../common/globals';
-import { PlayerStates, SpiderStates } from '../states';
+import { SpiderStates } from '../states';
 import Spider from '../../../../game-objects/enemies/spider';
 import AbstractMovableState from '../../base/abstract-movable-state';
-import { Direction, DIRECTION as DIRECTION_HIT } from '../../../../common/tiled/types';
 
 class HurtStateSpider extends AbstractMovableState {
     hurtPushbackSpeed: number;
@@ -24,7 +22,6 @@ class HurtStateSpider extends AbstractMovableState {
 
     onEnter(args?: unknown[]) {
         const hitDirection = args?.[0] as typeof ATTACK_DIRECTION | undefined;
-        console.log('[HurtStateSpider] onEnter hitDirection:', hitDirection);
 
         const body = this.gameObject.body as Phaser.Physics.Arcade.Body;
         body.velocity.x = 0;

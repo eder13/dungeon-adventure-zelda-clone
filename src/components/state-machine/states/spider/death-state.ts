@@ -1,4 +1,4 @@
-import { SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
+import { SPIDER_RED_ANIMATION_KEYS } from '../../../../common/assets';
 import { EVENT_BUS, Events } from '../../../../common/events';
 import { DELAYED_PUSH_BACK_HURT_RESET } from '../../../../common/globals';
 import Spider from '../../../../game-objects/enemies/spider';
@@ -24,7 +24,7 @@ class DeathStateSpider extends AbstractMovableState {
         this.gameObject.scene.sound.play('SFX_ENEMY_DEAD', { volume: 0.4 });
 
         this.gameObject.play({
-            key: SPIDER_ANIMATION_KEYS.DEATH,
+            key: SPIDER_RED_ANIMATION_KEYS.DEATH,
             repeat: 0,
         });
 
@@ -37,7 +37,6 @@ class DeathStateSpider extends AbstractMovableState {
         });
 
         this.gameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            console.log('Die Animation is done');
             this.onDefeat();
         });
     }

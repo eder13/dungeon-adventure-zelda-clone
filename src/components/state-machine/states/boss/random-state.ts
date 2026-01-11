@@ -1,13 +1,5 @@
-import { PlayerAnimation, SPIDER_ANIMATION_KEYS } from '../../../../common/assets';
-import {
-    ATTACK_DIRECTION,
-    BOSS_RANDOM_DIRECTION_DELAY,
-    BOSS_RANDOM_STATE_FINISHED_DELAY,
-    DELAYED_PUSH_BACK_HURT_RESET,
-    DIRECTION,
-} from '../../../../common/globals';
+import { BOSS_RANDOM_DIRECTION_DELAY, BOSS_RANDOM_STATE_FINISHED_DELAY } from '../../../../common/globals';
 import AbstractMovableState from '../../base/abstract-movable-state';
-import { Direction, DIRECTION as DIRECTION_HIT } from '../../../../common/tiled/types';
 import Boss from '../../../../game-objects/enemies/boss';
 import { BossStates } from '../states';
 

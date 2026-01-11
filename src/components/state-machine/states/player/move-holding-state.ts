@@ -1,4 +1,4 @@
-import { PlayerAnimation } from '../../../../common/assets';
+import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
 import { DIRECTION } from '../../../../common/globals';
 import Player from '../../../../game-objects/player/player';
 import AbstractMovableState from '../../base/abstract-movable-state';
@@ -21,8 +21,6 @@ class MoveHoldingState extends AbstractMovableState {
 
     handleObjectCarrying() {
         const heldGameObjectComponent = (this.gameObject as any).objectHeldComponent;
-
-        console.log('+++++ heldGameObjectComponent', heldGameObjectComponent);
 
         if (!heldGameObjectComponent) {
             this.stateMachine.setState(PlayerStates.IDLE);
@@ -78,7 +76,7 @@ class MoveHoldingState extends AbstractMovableState {
             DIRECTION.isMovingLeft = false;
             DIRECTION.isMovingRight = false;
 
-            this.gameObject.play({ key: PlayerAnimation.PICKUP_WALKING_DOWN, repeat: -1 }, true);
+            this.gameObject.play({ key: PLAYER_ANIMATION_KEYS.PICKUP_WALKING_DOWN, repeat: -1 }, true);
 
             this.gameObject.updateVelocity(false, 1);
         } else if (controls.isUpDown) {
@@ -87,7 +85,7 @@ class MoveHoldingState extends AbstractMovableState {
             DIRECTION.isMovingLeft = false;
             DIRECTION.isMovingRight = false;
 
-            this.gameObject.play({ key: PlayerAnimation.PICKUP_WALKING_UP, repeat: -1 }, true);
+            this.gameObject.play({ key: PLAYER_ANIMATION_KEYS.PICKUP_WALKING_UP, repeat: -1 }, true);
 
             this.gameObject.updateVelocity(false, -1);
         } else {
@@ -112,7 +110,7 @@ class MoveHoldingState extends AbstractMovableState {
                 DIRECTION.isMovingUp = false;
                 DIRECTION.isMovingDown = false;
 
-                this.gameObject.play({ key: PlayerAnimation.PICKUP_WALKING_LEFT, repeat: -1 }, true);
+                this.gameObject.play({ key: PLAYER_ANIMATION_KEYS.PICKUP_WALKING_LEFT, repeat: -1 }, true);
             }
 
             this.gameObject.updateVelocity(true, -1);
@@ -129,7 +127,7 @@ class MoveHoldingState extends AbstractMovableState {
                 DIRECTION.isMovingUp = false;
                 DIRECTION.isMovingDown = false;
 
-                this.gameObject.play({ key: PlayerAnimation.PICKUP_WALKING_RIGHT, repeat: -1 }, true);
+                this.gameObject.play({ key: PLAYER_ANIMATION_KEYS.PICKUP_WALKING_RIGHT, repeat: -1 }, true);
             }
 
             this.gameObject.updateVelocity(true, 1);

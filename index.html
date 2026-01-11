@@ -16,12 +16,21 @@
             }
 
             a {
-                color: black;
+                color: #007bff;
                 text-decoration: none;
+                display: grid;
+                place-items: center;
             }
 
             a:hover {
                 text-decoration: underline;
+            }
+
+            .github-ribbon {
+                position: absolute;
+                top: 0;
+                left: 0;
+                border: 0;
             }
 
             footer {
@@ -43,8 +52,18 @@
     <body>
         <div class="container" id="game-container"></div>
         <script type="module" src="/src/main.ts"></script>
+        <a class="github-ribbon" href="https://github.com/eder13/rpg-phaser-typescript"
+            ><img
+                loading="lazy"
+                decoding="async"
+                width="149"
+                height="149"
+                src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png"
+                class="attachment-full size-full"
+                alt="Fork me on GitHub"
+        /></a>
 
-        <footer>
+        <footer id="footer">
             <div>
                 <div>
                     <a href="https://ranftl.dev/">Made by Simon Ranftl</a>
