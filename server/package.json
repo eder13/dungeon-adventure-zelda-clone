@@ -1,0 +1,29 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "build": "env NODE_ENV=production node esbuild.prod.js",
+        "start": "concurrently \"env NODE_ENV=development node esbuild.dev.js\" \"nodemon --watch ./dist --delay 0.1 --exec 'node ./dist/server.js'\"",
+        "serve-prod": "env NODE_ENV=production node ./dist/server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "@types/node": "^25.0.6",
+        "concurrently": "^9.2.1",
+        "dotenv": "^17.2.3",
+        "esbuild": "^0.27.2",
+        "nodemon": "^3.1.11",
+        "prisma": "^6.19.1",
+        "ts-loader": "^9.5.4",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@hapi/hapi": "^21.4.4",
+        "@hapi/inert": "^7.1.0",
+        "@prisma/client": "^6.19.1"
+    }
+}

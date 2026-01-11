@@ -5,14 +5,6 @@ import { ASSET_KEYS } from '../common/assets';
 
 export type LeaderboardEntry = { name: string; time: string };
 
-const MOCK_LEADERBOARD_DATA: LeaderboardEntry[] = [
-    { name: 'Player1', time: '1:00' },
-    { name: 'Player2', time: '2:00' },
-    { name: 'Player3', time: '3:00' },
-    { name: 'Player4', time: '4:00' },
-    { name: 'Player5', time: '5:00' },
-];
-
 export class LeaderboardScene extends Phaser.Scene {
     leaderboardData!: LeaderboardEntry[];
     transitionFromScene!: keyof typeof SCENE_KEYS;
@@ -28,8 +20,43 @@ export class LeaderboardScene extends Phaser.Scene {
     }
 
     create() {
+        // ensure Phaser keyboard is enabled (e.g. re-enable after DOM input in congratulations scene)
+        if (this.input && this.input.keyboard) {
+            this.input.keyboard.enabled = true;
+        }
+        // remove focus from any HTML input so key events reach Phaser (safe in browsers)
+        try {
+            if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+            }
+        } catch (e) {
+            /* ignore in non-browser env */
+        }
+
+        // Capture Enter on window in capture phase to ensure it fires even if some DOM input still exists
+        const onEnter = (e: KeyboardEvent) => {
+            if (e.key !== 'Enter') return;
+            // prevent default/stop propagation so other listeners (e.g. lingering DOM inputs) don't swallow it
+            e.preventDefault();
+            e.stopPropagation();
+            if (this.transitionFromScene !== SCENE_KEYS.CONGRATULATIONS) {
+                this.scene.start(SCENE_KEYS.START_SCREEN);
+            } else {
+                window.location.reload();
+            }
+        };
+        // use capture=true so we get the event before it reaches focused inputs
+        window.addEventListener('keydown', onEnter, true);
+        // remove the listener when the scene shuts down
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            window.removeEventListener('keydown', onEnter, true);
+        });
+
         if (this.input.keyboard) {
             this.keyboardInput = new KeyboardInput(this.input.keyboard);
+        } else {
+            // fallback stub to avoid crashes when keyboard manager isn't available
+            this.keyboardInput = { isEnterKeyDown: false } as unknown as KeyboardInput;
         }
 
         (async () => {
@@ -41,7 +68,7 @@ export class LeaderboardScene extends Phaser.Scene {
                 //return;
             }
 
-            const data = MOCK_LEADERBOARD_DATA; // !response.ok ? MOCK_LEADERBOARD_DATA : await response.json();
+            const data = await response.json();
             this.leaderboardData = data;
 
             this.add
@@ -76,6 +103,7 @@ export class LeaderboardScene extends Phaser.Scene {
     }
 
     private showTextAfterCongratulationsScene() {
+        this.cursor = this.add.image(230, 300, ASSET_KEYS.UI_CURSOR).setOrigin(0.5);
         this.add
             .text(this.scale.width / 2, 300, 'Restart Game', {
                 fontSize: '16px',
@@ -95,9 +123,9 @@ export class LeaderboardScene extends Phaser.Scene {
     }
 
     update(): void {
-        if (this.keyboardInput.isEnterKeyDown && this.transitionFromScene !== SCENE_KEYS.CONGRATULATIONS) {
+        if (this.keyboardInput?.isEnterKeyDown && this.transitionFromScene !== SCENE_KEYS.CONGRATULATIONS) {
             this.scene.start(SCENE_KEYS.START_SCREEN);
-        } else if (this.keyboardInput.isEnterKeyDown && this.transitionFromScene === SCENE_KEYS.CONGRATULATIONS) {
+        } else if (this.keyboardInput?.isEnterKeyDown) {
             window.location.reload();
         }
     }
