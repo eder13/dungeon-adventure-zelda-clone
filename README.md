@@ -4,7 +4,7 @@
 
 A short zelda like dungeon adventure written in TypeScript and Phaser with a leaderboard feature for speedrunning.
 
-# [Demo](https://dungeon.uber.space/)
+# [Demo](https://ranftl.dev/content/dungeon_game/dungeon.html)
 
 ## Setup
 
