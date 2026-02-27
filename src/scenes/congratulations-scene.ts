@@ -126,28 +126,36 @@ export default class CongratulationsScene extends Phaser.Scene {
             if (!name) return;
             const finalTime = this.finalTime;
 
-            fetch('/api/leaderboard', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, finalTime }),
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        this.scene.start(SCENE_KEYS.LEADERBOARD_SCENE, { lastScene: SCENE_KEYS.CONGRATULATIONS });
-                        this.errorPosingLeaderBoardText?.setVisible(false);
+            let currentLeaderBoard:
+                | null
+                | string
+                | Array<{
+                      name: string;
+                      time: string;
+                  }> = localStorage.getItem('game');
+            if (!currentLeaderBoard) {
+                currentLeaderBoard = [];
+            } else {
+                currentLeaderBoard = JSON.parse(currentLeaderBoard);
+            }
 
-                        this.nameInput?.destroy();
-                        this.submitBtn?.destroy();
-                        this.errorPosingLeaderBoardText?.destroy();
-                    } else {
-                        throw new Error('Failed to submit score');
-                    }
-                })
-                .catch((error) => {
-                    this.errorPosingLeaderBoardText?.setVisible(true);
-                });
+            localStorage.setItem(
+                'game',
+                JSON.stringify([
+                    ...(currentLeaderBoard ?? []),
+                    {
+                        name,
+                        time: finalTime,
+                    },
+                ]),
+            );
+
+            this.scene.start(SCENE_KEYS.LEADERBOARD_SCENE, { lastScene: SCENE_KEYS.CONGRATULATIONS });
+            this.errorPosingLeaderBoardText?.setVisible(false);
+
+            this.nameInput?.destroy();
+            this.submitBtn?.destroy();
+            this.errorPosingLeaderBoardText?.destroy();
         };
 
         this.submitBtn.on('pointerdown', doSubmit, this);

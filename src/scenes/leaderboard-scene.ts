@@ -2,8 +2,9 @@ import * as Phaser from 'phaser';
 import { SCENE_KEYS } from './scene-keys';
 import KeyboardInput from '../components/input-component/keyboard';
 import { ASSET_KEYS } from '../common/assets';
+import { TimeParser } from '../../server/src/helpers/time';
 
-export type LeaderboardEntry = { name: string; time: string };
+export type LeaderboardEntry = { name: string; time: string } | null;
 
 export class LeaderboardScene extends Phaser.Scene {
     leaderboardData!: LeaderboardEntry[];
@@ -60,16 +61,24 @@ export class LeaderboardScene extends Phaser.Scene {
         }
 
         (async () => {
-            // Fetch leaderboard data from the server
-            const response = await fetch('/api/leaderboard');
-
-            if (!response.ok) {
-                console.error('Failed to fetch leaderboard data');
-                //return;
+            let currentLeaderBoard:
+                | null
+                | string
+                | Array<{
+                      name: string;
+                      time: string;
+                  }> = localStorage.getItem('game');
+            if (!currentLeaderBoard) {
+                currentLeaderBoard = [];
+            } else {
+                currentLeaderBoard = JSON.parse(currentLeaderBoard);
             }
 
-            const data = await response.json();
-            this.leaderboardData = data;
+            const dataSorted = (currentLeaderBoard as Array<LeaderboardEntry>).sort((a, b) => {
+                return TimeParser.parseTimeToMs(a?.time ?? '0') - TimeParser.parseTimeToMs(b?.time ?? '0');
+            });
+
+            this.leaderboardData = dataSorted;
 
             this.add
                 .text(this.scale.width / 2, 32, 'Leaderboard', {
@@ -87,7 +96,7 @@ export class LeaderboardScene extends Phaser.Scene {
 
             this.leaderboardData.forEach((entry, index) => {
                 this.add
-                    .text(this.scale.width / 2, 100 + index * 32, `Name: ${entry.name}        Time: ${entry.time}`, {
+                    .text(this.scale.width / 2, 100 + index * 32, `Name: ${entry?.name}        Time: ${entry?.time}`, {
                         fontSize: '16px',
                         align: 'center',
                     })
